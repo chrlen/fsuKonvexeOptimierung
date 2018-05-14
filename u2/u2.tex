@@ -37,31 +37,12 @@ Ein Kegel $K \subset  \mathbb{R}^n$ ist konvex $\Leftrightarrow K + K \subseteq 
 \begin{split}
 p,q \in K &\Leftrightarrow \big(k_1 \cdot p \in K\big) \land \big(k_2 \cdot q \in K\big) ,k_i > 0\\
 &\Leftrightarrow \{ (1-t)\cdot k_1\cdot p + t\cdot k_2\cdot q \} \subseteq K,t \in \left[0,1 \right]\\
-&\Leftrightarrow \{ p + q \} \subseteq K,t \in \left[0,1 \right],k_1\\
+&\Leftrightarrow \{ p + q \} \subseteq K\\
 &\Leftrightarrow K + K \subseteq K
 \end{split}
 \end{equation*}
 
 
-
-%\paragraph{$\Rightarrow$:}
-%\begin{equation}
-%\begin{split}
-%p,q \in K &\Rightarrow \big(t_1 \cdot p \in K\big) \land \big(t_2 \cdot q \in K\big) ,t_i > 0\\ 
-%&\Rightarrow p+q = t_1 \cdot p,t_1 = \frac{p+q}{p}
-%\end{split}
-%\end{equation}
-%
-%
-%%{(1 − t)x + ty | 0 ≤ t ≤ 1}
-%
-%
-%\paragraph{$\Leftarrow$:}
-%\begin{equation}
-%\begin{split}
-%\big(p,q \in K \Rightarrow p + q \in K\big) &\Rightarrow 
-%\end{split}
-%\end{equation}
 
 \hr
 \subsubsection*{Aufgabe 9}
@@ -70,27 +51,19 @@ p,q \in K &\Leftrightarrow \big(k_1 \cdot p \in K\big) \land \big(k_2 \cdot q \i
 	$$y \in \mathbb{R}^n$$
 	$$f(x) = \vert\vert x -y \vert \vert$$
 
-%	\paragraph{Norm:}
-	
-	% \begin{enumerate}
-	% 	\item Definitheit: $\vert\vert x \vert \vert = 0 \Rightarrow x=0$
-	% 	\item Absolute Homogenität: $\vert \vert \alpha \cdot x  \vert \vert = \vert \alpha \vert \cdot \vert \vert x \vert \vert$
-	% 	\item Dreiecksungleichung: $\vert \vert x+y \vert \vert \leq \vert \vert x \vert \vert + \vert \vert y \vert \vert$
-	% \end{enumerate}
-
 	\begin{center}
 		$p,q \in \mathbb{R}^n,t \in \left[0,1 \right]$\\
 		$f$ ist konvex $\Leftrightarrow f((1-t)p+tq) \leq (1-t)f(p)+ tf(q)$ 
 	\end{center}
 	
-
 \begin{equation*}
 \begin{split}
-	\vert \vert ((1-t)p + tq) -y \vert \vert &\leq (1-t) \vert \vert p -y\vert \vert + t\vert \vert q -y\vert \vert\\
-	&\leq  \vert \vert (1-t) (p - y)\vert \vert + \vert \vert t(q -y)\vert \vert\\
-	&\leq  \vert \vert  (1-t)p - (1-t)y\vert \vert + \vert \vert tq -ty\vert \vert\\
+(1-t)f(p)+ tf(q) &=(1-t) \vert \vert p -y\vert \vert + t\vert \vert q -y\vert \vert\\
+&=  \vert \vert (1-t) (p - y)\vert \vert + \vert \vert t(q -y)\vert \vert\\
+&= \vert \vert  (1-t)p - (1-t)y\vert \vert + \vert \vert tq -ty\vert \vert \\
 \end{split}
 \end{equation*}
+
 
 \begin{equation*}
 \begin{split}
@@ -100,32 +73,39 @@ p,q \in K &\Leftrightarrow \big(k_1 \cdot p \in K\big) \land \big(k_2 \cdot q \i
 \end{split}
 \end{equation*}
 
-% \begin{equation}
-% \begin{split}
-% 	f((1-t)p+tq) &\leq (1-t)f(p) + tf(q)\\
-% 	\vert\vert((1-t)p+tq) -y \vert\vert &\leq (1-t)\vert\vert p - y \vert\vert+ t \vert\vert q - y\vert\vert\\
-% 	\vert\vert(1-t)p+tq -y \vert\vert &\leq \vert\vert (1 - t) (p - y) \vert\vert + \vert\vert t(q - y)\vert\vert\\
-% 	\vert\vert p -tp + tq -y \vert\vert &\leq \vert\vert p -tp + ty -y\vert\vert + \vert\vert tq - ty\vert\vert\\
-% 	\end{split}
-% \end{equation}
 
+Somit ist $f$ konvex.
 
-% \paragraph{Ist $f$ auch strikt konvex?}
-% $$p,q \in \mathbb{R}^n,y=0_n,p=q$$
-% \begin{equation}
-% \begin{split}
-% 	f((1-t)p+tq) &= (1-t)f(p) + tf(q)\\
-% 	\vert\vert((1-t)p+tp) -y\vert\vert &= (1-t) \vert\vert  (p -y)  \vert\vert+ t \vert\vert (p-y)\vert\vert\\
-% 	\vert\vert p-y\vert\vert &= (1-t) \vert\vert  (p -y)  \vert\vert+ t \vert\vert (p-y)\vert\vert\\
-% 	\end{split}
-% \end{equation}
 
 \hr
 \subsubsection*{Aufgabe 11}
 $$Q  \in R^{n\times n};q \in \mathbb{R}^n; c \in \mathbb{R}$$
 $$\min\limits_{x \in \mathbb{R}^n} f(x) = \frac{1}{2} x^TQx+q^Tx+c$$
 
-\paragraph{1} Sei $Q$ psd $\Rightarrow f$ konvex
+
+Es gilt:
+\begin{equation}
+\begin{split}
+f((1-t)p + tq) = (1-t)f(p)+tf(q) -\frac{1}{2}t(1-t)(p-q)^TA(p-q)\\ 
+\end{split}\label{pre}
+\end{equation}
+
+
+
+\begin{equation}
+\begin{split}
+&f((1-t)p+tq) \leq (1-t)f(p)+ tf(q)\\
+\Leftrightarrow&~ 0 \leq (1-t)f(p)+ tf(q) - f((1-t)p+tq)\\
+\Leftrightarrow&~ 0 \leq \frac{1}{2}t(1-t)(p-q)^TA(p-q)
+\end{split}\ref{res}
+\end{equation}
+
+
+Sei $A \succeq 0$,dann gilt: $\frac{1}{2}t(1-t)(p-q)^TA(p-q) \geq 0 \Rightarrow f$ ist konvex.\\ 
+Sei $A \succ 0$,dann gilt: $\frac{1}{2}t(1-t)(p-q)^TA(p-q) > 0 \Rightarrow f$ ist strikt konvex.
+
+
+\paragraph{Zeige Gleichung \ref{pre}}
 
 
 \begin{equation}
