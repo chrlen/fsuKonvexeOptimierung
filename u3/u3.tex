@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
 \usepackage{geometry}
+\usepackage{multicol}
 \usepackage{tikz}
 \usetikzlibrary{automata,positioning}
 \geometry{top=20mm, left=20mm, right=10mm, bottom=15mm}
@@ -24,120 +25,79 @@
 
 \begin{center}
 	\section*{Konvexe Optimierung}
-	\subsection*{2. Übungsserie}
+	\subsection*{3. Übungsserie}
 \end{center}
 
-\subsubsection*{Aufgabe 7}
-\begin{center}
-Ein Kegel $K \subset  \mathbb{R}^n$ ist konvex $\Leftrightarrow K + K \subseteq K$.
-\end{center}
-
+\subsubsection*{Aufgabe 18}
+\subsubsection*{Aufgabe 21}
 
 \begin{equation*}
-\begin{split}
-p,q \in K &\Leftrightarrow \big(k_1 \cdot p \in K\big) \land \big(k_2 \cdot q \in K\big) ,k_i > 0\\
-&\Leftrightarrow \{ (1-t)\cdot k_1\cdot p + t\cdot k_2\cdot q \} \subseteq K,t \in \left[0,1 \right]\\
-&\Leftrightarrow \{ p + q \} \subseteq K\\
-&\Leftrightarrow K + K \subseteq K
+    \begin{split}
+     \min\limits_{x \in \mathbb{R}^n} &\quad f(x) = (x_1 - 3)^2 + (x_2 -4)^2\\
+    s.t. &\quad \quad 2x_1 + x_2 \leq 6  
 \end{split}
 \end{equation*}
 
-
-
-\hr
-\subsubsection*{Aufgabe 9}
-
-	$$f: \mathbb{R}^n \rightarrow \mathbb{R}$$
-	$$y \in \mathbb{R}^n$$
-	$$f(x) = \vert\vert x -y \vert \vert$$
-
-	\begin{center}
-		$p,q \in \mathbb{R}^n,t \in \left[0,1 \right]$\\
-		$f$ ist konvex $\Leftrightarrow f((1-t)p+tq) \leq (1-t)f(p)+ tf(q)$ 
-	\end{center}
-	
+\paragraph{Konvexität}
+\paragraph{Lösung}
+Stelle Lagrange-Multiplikator für Nebenbedingung auf:
 \begin{equation*}
-\begin{split}
-(1-t)f(p)+ tf(q) &=(1-t) \vert \vert p -y\vert \vert + t\vert \vert q -y\vert \vert\\
-&=  \vert \vert (1-t) (p - y)\vert \vert + \vert \vert t(q -y)\vert \vert\\
-&= \vert \vert  (1-t)p - (1-t)y\vert \vert + \vert \vert tq -ty\vert \vert \\
-\end{split}
+    \mathcal{L}(x_1,x_2,\mu) = f(x) = (x_1 - 3)^2 + (x_2 -4)^2 + \mu(2x_1 + x_2 - 6 )
 \end{equation*}
+Bilde partielle Ableitungen und setze gleich Null:
 
-
-\begin{equation*}
-\begin{split}
-\vert \vert  (1-t)p - (1-t)y\vert \vert + \vert \vert tq -ty\vert \vert &\geq \vert \vert (1-t)p - (1-t)y +tq -ty \vert \vert \\
-&= \vert \vert (1-t)p - y +ty +tq -ty\vert \vert \\
-&= \vert \vert (1-t)p + tq - y\vert \vert\\
-\end{split}
-\end{equation*}
-
-
-Somit ist $f$ konvex.
-
-
-\hr
-\subsubsection*{Aufgabe 11}
-$$Q  \in R^{n\times n};q \in \mathbb{R}^n; c \in \mathbb{R}$$
-$$\min\limits_{x \in \mathbb{R}^n} f(x) = \frac{1}{2} x^TQx+q^Tx+c$$
-
-
-Es gilt:
-\begin{equation}
-\begin{split}
-f((1-t)p + tq) = (1-t)f(p)+tf(q) -\frac{1}{2}t(1-t)(p-q)^TA(p-q)\\ 
-\end{split}\label{pre}
+\begin{equation}\label{dx1}
+\begin{aligned}
+            &\nabla_{x_1}\mathcal{L}(x_1,x_2,\mu) = 2(x_1-3)+\mu \overset{!}{=} 0 \\
+        \Rightarrow& x_1 = \frac{1}{2}(6-\mu)
+\end{aligned}
 \end{equation}
 
-
-
-\begin{equation}
-\begin{split}
-&f((1-t)p+tq) \leq (1-t)f(p)+ tf(q)\\
-\Leftrightarrow&~ 0 \leq (1-t)f(p)+ tf(q) - f((1-t)p+tq)\\
-\Leftrightarrow&~ 0 \leq \frac{1}{2}t(1-t)(p-q)^TA(p-q)
-\end{split}\ref{res}
+\begin{equation}\label{dx2}
+\begin{aligned}
+    &\nabla_{x_2}\mathcal{L}(x_1,x_2,\mu) = 2(x_2-4)+\mu \overset{!}{=} 0 \\
+    \Rightarrow& x_2 = \frac{1}{2}(8-\mu)
+\end{aligned}
 \end{equation}
 
-
-Sei $A \succeq 0$,dann gilt: $\frac{1}{2}t(1-t)(p-q)^TA(p-q) \geq 0 \Rightarrow f$ ist konvex.\\ 
-Sei $A \succ 0$,dann gilt: $\frac{1}{2}t(1-t)(p-q)^TA(p-q) > 0 \Rightarrow f$ ist strikt konvex.
-
-
-\paragraph{Zeige Gleichung \ref{pre}}
-
-
-\begin{equation}
-\begin{split}
-f((1-t)a+tb) &= \frac{1}{2}((1-t)a+tb)^T Q ((1-t)a+tb)+ q^T((1-t)a+tb) + c \\
-&= \frac{1}{2}((1-t)a^T + tb^T) ((1-t)Qa + Qtb) + q^T((1-t)a+tb) + c\\
-&= \frac{1}{2}(1-t)^2 a^TQa + \frac{1}{2}t(1-t)a^TQb + \frac{1}{2}t(1-t)b^TQa + \frac{1}{2}t^2b^TQb + (1-t)q^Ta+t q^Tb +c%&= (1-t)\Big(\frac{1}{2} a^TQa+q^Ta+c\Big) + t\Big(\frac{1}{2} b^TQb+q^Tb+c\Big)
-\end{split}
+\begin{equation}\label{dmu}
+\begin{aligned}
+    & \nabla_{\mu}\mathcal{L}(x_1,x_2,\mu) =2x_1+x_2-6 \overset{!}{=} 0 \\
+& \Rightarrow 2x_1 = 6 - x_2
+\end{aligned}
 \end{equation}
 
-
-\begin{equation}
-\begin{split}
-(1-t)f(a) + (t)f(b) &= (1-t)(\frac{1}{2} a^TQa+q^Ta+c) 									+ t(\frac{1}{2} b^TQb+q^Tb+c)\\
-					&= \frac{1}{2} a^TQa-t\frac{1}{2} a^TQa+q^Ta-tc -tq^Ta+c + t\frac{1}{2} b^TQb+tq^Tb+tc\\
-&=\frac{1}{2}(1-t)a^TQa +(1-t)q^Ta + t\frac{1}{2} b^TQb+tq^Tb +c
-\end{split}
+Löse das sich ergebende Gleichungssystem:
+\begin{equation}\label{mueq}
+\begin{aligned}
+    \eqref{dx1},\eqref{dx2},\eqref{dmu} &\Rightarrow 2\left( \frac{1}{2} \left(6 - \mu \right) \right) = 6 - \frac{1}{2} \left( 8-\mu \right)\\
+    \Rightarrow & 6 - \mu  = 6 - \frac{1}{2} \left( 8-\mu \right)\\
+    \Rightarrow &  - \mu  =  - \frac{1}{2} \left( 8-\mu \right)\\
+    \Rightarrow &   \mu  =   \frac{1}{2} \left( 8-\mu \right)  \\
+    \Rightarrow &   \frac{3}{2}\mu  =  4 \\
+    \Rightarrow &   \mu  =  \frac{8}{3} \\
+\end{aligned}
+\end{equation}
+\begin{equation}\label{x1eq}
+\begin{aligned}
+    \eqref{dx1},\eqref{mueq} \Rightarrow& x_1 = \frac{1}{2}\left(6-\frac{8}{3}\right)\\
+    \Rightarrow & x_1 = \left(3-\frac{1 \cdot 8}{2\cdot 3}\right) = \frac{18}{6} -  \frac{8}{6} = \frac{10}{6}\\
+\end{aligned}
+\end{equation}
+\begin{equation}\label{x2eq}
+\begin{aligned}
+    \eqref{dx2},\eqref{mueq} \Rightarrow& x_2 = \frac{1}{2}\left(8-\frac{8}{3}\right)\\
+    \Rightarrow & x_2 = \left(4-\frac{1 \cdot 8}{2\cdot 3}\right) = \frac{24}{6} -  \frac{8}{6} = \frac{16}{6}\\
+\end{aligned}
 \end{equation}
 
-
+Durch Einsetzen ergibt sich der Funktionswert:
 \begin{equation}
-\begin{split}
-\frac{1}{2}(1-t)a^TQa +(1-t)q^Ta + t\frac{1}{2} b^TQb+tq^Tb +c \dots\\
-\dots -\big(\frac{1}{2}(1-t)^2 a^TQa + \frac{1}{2}t(1-t)a^TQb + \frac{1}{2}t(1-t)b^TQa + \frac{1}{2}t^2b^TQb + (1-t)q^Ta+t q^Tb +c \big) = 0\\
-\frac{1}{2}(1-t)a^TQa +(1-t)q^Ta + t\frac{1}{2} b^TQb+tq^Tb +c\dots\\
-\dots -\frac{1}{2}(1-t)^2 a^TQa - \frac{1}{2}t(1-t)a^TQb - \frac{1}{2}t(1-t)b^TQa - \frac{1}{2}t^2b^TQb - (1-t)q^Ta-t q^Tb -c = 0\\
-\frac{1}{2}(1-t)a^TQa -\frac{1}{2}(1-t)^2 a^TQa + t\frac{1}{2} b^TQb - \frac{1}{2}t^2b^TQb - t\frac{1}{2}(1-t)a^TQb - \frac{1}{2}t(1-t)b^TQa  = 0\\
-\frac{1}{2}t(1-t)a^TQa + \frac{1}{2} t(1-t)b^TQb                  - t\frac{1}{2}(1-t)a^TQb - \frac{1}{2}t(1-t)b^TQa  = 0\\
-a^TQa +  b^TQb                  - a^TQb - b^TQa  = 0\\
-(a-b)^TQ(a-b)  = 0\\
-\end{split}
+\begin{aligned}
+    \mathcal{L}\left(\frac{10}{6},\frac{16}{6},\frac{8}{3}\right) = 
+\end{aligned}
 \end{equation}
+
 
 
 \end{document}
