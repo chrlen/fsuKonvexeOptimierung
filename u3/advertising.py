@@ -30,18 +30,3 @@ for columnName in ['TV','Radio','Newspaper']:
     plt.title(columnName)
     plt.show()
 
-
-
-
-
-
-#plt.figure()
-
-
-
-#data['TV'].plot().scatter()
-
-
-
-
-#print(data['TV'])
