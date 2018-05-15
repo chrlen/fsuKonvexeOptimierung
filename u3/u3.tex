@@ -14,6 +14,22 @@
 
 
 \newcommand{\hr}{\begin{center} \line(1,0){450} \end{center}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{^\mathsf{T}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator{\co}{co}
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\Proj}{Pr}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\midd}{\mathrel{}\middle|\mathrel{}}
+
+
+
 
 \pagestyle{fancy}
 \lhead{Christian Lengert}
@@ -24,30 +40,40 @@
 \begin{document}
 
 \begin{center}
-    \section*{Konvexe Optimierung}
-    \subsection*{3. Übungsserie}
+	\section*{Konvexe Optimierung}
+	\subsection*{3. Übungsserie}
 \end{center}
 
 \subsubsection*{Aufgabe 18}
-\paragraph{(a)}
-\begin{equation*}
-    \begin{aligned}
-       \min\limits_{x \in \mathbb{R}^n} \quad \sum\limits_{i = 1}^m \left( x_1\xi_i + x_2 -\eta_i \right)^2 = \min\limits_{x \in \mathbb{R}^n} \quad f(x)
-    \end{aligned}
-\end{equation*}
-\begin{equation*}
-    \begin{aligned}
-    f(x) &= \sum\limits_{i = 1}^m \left( x_1\xi_i + x_2 -\eta_i \right)^2
-    & 
-    \end{aligned}
-\end{equation*}
-
-
+%\paragraph{(a)}
+%\begin{equation*}
+%    \begin{aligned}
+%       \min\limits_{x \in \mathbb{R}^n} \quad \sum\limits_{i = 1}^m \left( x_1\xi_i + x_2 -\eta_i %\right)^2 = \min\limits_{x \in \mathbb{R}^n} \quad f(x)
+%    \end{aligned}
+%\end{equation*}
+%\begin{equation*}
+%    \begin{aligned}
+%    f(x) &= \sum\limits_{i = 1}^m \left( x_1\xi_i + x_2 -\eta_i \right)^2
+%    & 
+%    \end{aligned}
+%\end{equation*}
 
 \paragraph{(b)}
 \begin{equation*}
     f(x)=\frac{1}{2} \vert \vert Ax -b \vert \vert^2
 \end{equation*}
+\begin{equation}\label{df}
+    \nabla_x f(x) = \frac{\partial}{\partial x}f(x)=A\tr \left(Ax -b\right)
+\end{equation}
+Berechne Nullstellen der ersten Ableitung:
+\begin{align*}
+    \eqref{df} \overset{!}{=} 0_m &\Rightarrow  A\tr \left(Ax -b\right)= 0_m\\
+    &\Rightarrow A\tr Ax - A\tr b = 0_m\\
+    &\Rightarrow A\tr Ax  = A\tr b\\
+    &\Rightarrow x^*  = (A\tr A)^{-1}A\tr b\\
+\end{align*}
+Da $A$ den vollen Spaltenrang existiert das Inverse von $A\tr A$ und die Gleichung wird lösbar, wenn eine Schätzung von $b$ zur Verfügung steht.
+
 \hr
 \subsubsection*{Aufgabe 21}
 
@@ -59,6 +85,26 @@
 \end{equation*}
 
 \paragraph{Konvexität}
+Das Problem ist konvex, wenn die Menge der zulässigen Punkte $\mathcal{C}$ konvex ist und die Funktion $f$ konvex auf dieser Menge ist.
+\begin{align*}
+    f(x) &= \left(x_1 - 3\right)^2 + \left(x_2 -4\right)^2\\
+    &= \begin{pmatrix}x_1-3\\x_2 -4\end{pmatrix}\tr \begin{pmatrix}x_1-3\\x_2 -4\end{pmatrix}\\
+    &= \begin{pmatrix}x_1-3\\x_2 -4\end{pmatrix}\tr \begin{pmatrix}1&0\\0&1\end{pmatrix}  \begin{pmatrix}x_1-3\\x_2 -4\end{pmatrix} + 0_2 r + 0_2, \quad r \in \R^2
+\end{align*}
+Die Funktion $f$ hat quadratische Form und ist somit konvex.
+
+
+
+
+
+%Sei $\mathcal{C} = \{ x \in \R^2 \mid 2x_1 +x_2 \leq 6 \} = \{ x \in \R^2 \mid \left( x\right)\tr \left(2,1\right) \leq 6 \} $ und  $a,b \in \mathcal{C}$:
+
+
+
+%\begin{align}
+%    \left((1-t)a + tb\right)\tr \left(2,1\right) \leq 6
+%\end{align}
+
 \paragraph{Lösung}
 Stelle Lagrange-Multiplikator für Nebenbedingung auf:
 \begin{equation*}
