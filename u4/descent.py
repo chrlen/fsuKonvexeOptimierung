@@ -11,10 +11,26 @@ def crit2(fx_this,fx_next,epsilon2):
 #def crit3(fx_this,fx_next,epsilon2):
 #    return(fx_next - fx_this <= epsilon2 * np.max(1,np.abs(fx_this)))
 
-def simpleGradientDescent(Q,q,c,epsilon,plot=TRUE,verbose=TRUE):
-    print("done!")
+def simpleGradientDescentQU(Q,q,c,startAt,epsilon,maxit=10000,plot=True,verbose=True):
+	optimumNow = startAt
+	stepsTaken = list()
+	stepsTaken.append(optimumNow)
 
-def conjugateGradientDescent(Q,q,c,epsilon,plot=TRUE,verbose=TRUE):
+	finished = False
+	iterations = 0
+
+	while not finished:
+		print(iterations)
+		iterations = iterations + 1
+
+
+
+		if(iterations > maxit): 
+			finished = True
+			print("Maximum number of iterations reached")
+	return([thisTime,stepsTaken])
+
+def conjugateGradientDescentQU(Q,q,c,startAt,epsilon,maxit=10000,plot=True,verbose=True):
     print("done!")    
     
 Q = np.diag([2,2,1,1,0.5])
@@ -28,8 +44,8 @@ print("c = " + str(c))
 startAt = np.array([0,0])
 print("Starting at: " +str(startAt))
 
-simpleGradientOptimum = simpleGradientDescent(Q,q,c,0.00001)
-conjugateGradientOptimum = conjugateGradientDescent(Q,q,c,0.00001)
+simpleGradientOptimum = simpleGradientDescentQU(Q,q,c,startAt,0.00001)
+conjugateGradientOptimum = conjugateGradientDescentQU(Q,q,c,startAt,0.00001)
 
 
 
