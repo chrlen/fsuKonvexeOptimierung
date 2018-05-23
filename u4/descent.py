@@ -52,25 +52,11 @@ def crit2(x_thisTime, x_nextTime, epsilon2):
 def crit3(fx_thisTime, dfx_thisTime, epsilon3):
     return(npl.norm(dfx_thisTime) <= epsilon3 * max(1, np.abs(fx_thisTime)))
 
-#def orCriterias(Q, q, c, x_thisTime, x_nextTime, epsilon, epsilon2, epsilon3):
-#    return crit1(fx_thisTime, fx_nextTime, epsilon) or crit2(x_thisTime, x_nextTime, epsilon2) or crit3(fx_thisTime, dfx_thisTime, epsilon3)
-
 def orCriterias(Q, q, c, x_thisTime, x_nextTime, epsilon, epsilon2, epsilon3):
-    # Überprüfe erst das zweite Kriterium, da dieses am wenigsten Rechenaufwand benötigt
-    if(crit2(x_thisTime, x_nextTime, epsilon2)):
-        return True
-    else:
-        fx_thisTime = evalQuadraticForm(x_thisTime, Q, q, c)
-        fx_nextTime = evalQuadraticForm(x_nextTime, Q, q, c)
-        if crit1(fx_thisTime, fx_nextTime, epsilon):
-            return True
-        else:
-            dfx_thisTime = evalFirstOrderGradientOfQuadraticForm(x_thisTime, Q, q)
-            if crit3(fx_thisTime, dfx_thisTime, epsilon3):
-                return True
-            else:
-                return False
-
+    fx_thisTime = evalQuadraticForm(x_thisTime, Q, q, c)
+    fx_nextTime = evalQuadraticForm(x_nextTime, Q, q, c)
+    dfx_thisTime = evalFirstOrderGradientOfQuadraticForm(x_thisTime, Q, q)
+    return crit1(fx_thisTime, fx_nextTime, epsilon) or crit2(x_thisTime, x_nextTime, epsilon2) or crit3(fx_thisTime, dfx_thisTime, epsilon3)
 
 def simpleGradientDescentQU(Q, q, c, startAt,
                             epsilon=(1/(10**6)**2 ),
@@ -118,27 +104,50 @@ def simpleGradientDescentQU(Q, q, c, startAt,
         optimumNow = optimumNext
 
 
-def conjugateGradientDescentQU(Q, q, c, startAt, epsilon, maxit=10, plot=True, verbose=True):
-    print("done!")
+def conjugateGradientDescentQU(Q, q, c, startAt,
+                            epsilon=(1/(10**6)**2 ),
+                            epsilon2=1/(10**6),
+                            epsilon3=1/(10**6),
+                            maxit=1000,
+                            verbose=True
+                            ):
+    optimumNow = startAt
+    if verbose:
+        print("Starting at: " + str(startAt))
+        print("epsilon: " + str(epsilon))
+        print("epsilon2: " + str(epsilon2))
+        print("epsilon3: " + str(epsilon3))
+    stepsTaken = list()
 
 
-Q = np.diag([4, 2])
-q = np.array([-4, -2])
-c = 3
+    finished = False
+    iterations = 0
+
+    while not finished:     
+        d = -1 * evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q)
+        optimalStep = d.T.dot(d) / d.T.dot(Q).dot(d)
+        optimumNext = optimumNow + optimalStep * d
+        
+        stepsTaken.insert(0,optimumNow)
+
+        if verbose:
+            print("---- i =  " + str(iterations) + " ----")
+            print("x_i: " + str(optimumNow))
+            print("f(x_i): " + str(evalQuadraticForm(optimumNow,Q,q,c)))
+            print("-df(x_i): " + str(-1 * evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q)))
+            print("d: " + str(d))
+            print("Optimal step: " + str(optimalStep))
+            print("")
+
+        if iterations == maxit:
+            if verbose:
+                print("Maximum number of iterations reached: " + str(maxit))
+            return(stepsTaken)
+        if orCriterias(Q, q, c, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
+            return(stepsTaken)
+
+        iterations += 1
+        optimumNow = optimumNext
 
 
-print("The Function is:")
-print("Q = " + str(Q))
-print("q = " + str(q))
-print("c = " + str(c))
-print(evalQuadraticForm(np.array([1,1]),Q,q,c))
-print("")
 
-#startAt = np.repeat(10,5)
-startAt = np.array([5, -5])
-
-simpleGradientOptimum = simpleGradientDescentQU(Q, q, c, startAt, 0.00001)
-plotFunction(Q,q,c,-6,8,-6,8,simpleGradientOptimum,"Simple gradient descent path")
-
-# conjugateGradientOptimum = conjugateGradientDescentQU(
-#    Q, q, c, startAt, 0.00001)
