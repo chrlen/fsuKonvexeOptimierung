@@ -30,7 +30,7 @@ def plotFunction(Q,q,c,
     Z = evalField(Q,q,c,X,Y)
     
     plt.figure()
-    CS = plt.contourf(X, Y, Z)
+    plt.contourf(X, Y, Z)
     for i in range(1,len(path)):
         plt.plot([path[i][0],path[i-1][0]],
                   [path[i][1],path[i-1][1]],
@@ -128,9 +128,7 @@ def conjugateGradientDescent(Q, q, c, startAt,
                             verbose=True
                             ):
     optimumNow = startAt
-    print(epsilon)
     dNow = -1 * evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q)
-    print("dNow: " + str(dNow))
     if verbose:
         print("Starting at: " + str(startAt))
         print("epsilon: " + str(epsilon))
@@ -145,23 +143,17 @@ def conjugateGradientDescent(Q, q, c, startAt,
     while not finished:     
         #Berechne optimale Schrittweite
         sw_z = evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q).dot(dNow)
-        #print(sw_z) 
-        sw_n = dNow.dot(Q).dot(dNow)
-        #print(sw_n) 
+        sw_n = dNow.dot(Q).dot(dNow) 
         optimalStep = -1 * sw_z/float(sw_n)
         
         #Berechne naechstes Optimum
         optimumNext = optimumNow + optimalStep * dNow
-        #print(optimumNext)
         #Berechne Suchrichtung
         sr_z = evalFirstOrderGradientOfQuadraticForm(optimumNext,Q,q)
         sr_z_norm22 = npl.norm(sr_z)**2 
-        print("sz_z_norm: " + str(sr_z_norm22))
         sr_n = evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q)
         sr_n_norm22 = npl.norm(sr_n)**2 
-        print("sz_n_norm: " + str(sr_n_norm22))
         beta = sr_z_norm22 / sr_n_norm22
-        print("beta: " + str(beta))
         dNext = (-1 * sr_z) + beta * dNow
 
         stepsTaken.insert(0,optimumNow)
@@ -189,26 +181,3 @@ def conjugateGradientDescent(Q, q, c, startAt,
         iterations += 1
         optimumNow = optimumNext
         dNow = dNext
-
-
-
-Q = np.diag([4, 2])
-q = np.array([-4, -2])
-c = 3
-
-
-print("The Function is:")
-print("Q = " + str(Q))
-print("q = " + str(q))
-print("c = " + str(c))
-print(evalQuadraticForm(np.array([1,1]),Q,q,c))
-print("")
-
-#startAt = np.repeat(10,5)
-startAt = np.array([5, -5])
-
-#simpleGradientOptimum = simpleGradientDescent(Q, q, c, startAt, 0.00001)
-#plotFunction(Q,q,c,-6,8,-6,8,simpleGradientOptimum,"Simple gradient descent path")
-
-conjugateGradientOptimum = conjugateGradientDescent(Q, q, c, startAt, 0.00001)
-#plotFunction(Q,q,c,-6,8,-6,8,conjugateGradientOptimum,"Simple gradient descent path")
