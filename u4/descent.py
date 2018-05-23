@@ -56,7 +56,6 @@ def crit3(fx_thisTime, dfx_thisTime, epsilon3):
 #    return crit1(fx_thisTime, fx_nextTime, epsilon) or crit2(x_thisTime, x_nextTime, epsilon2) or crit3(fx_thisTime, dfx_thisTime, epsilon3)
 
 def orCriterias(Q, q, c, x_thisTime, x_nextTime, epsilon, epsilon2, epsilon3):
-    # Überprüfe erst das zweite Kriterium, da dieses am wenigsten Rechenaufwand benötigt
     if(crit2(x_thisTime, x_nextTime, epsilon2)):
         return True
     else:
@@ -76,7 +75,7 @@ def simpleGradientDescentQU(Q, q, c, startAt,
                             epsilon=(1/(10**6)**2 ),
                             epsilon2=1/(10**6),
                             epsilon3=1/(10**6),
-                            maxit=1000,
+                            maxit=9,
                             verbose=True
                             ):
     optimumNow = startAt
@@ -93,7 +92,10 @@ def simpleGradientDescentQU(Q, q, c, startAt,
 
     while not finished:     
         d = -1 * evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q)
-        optimalStep = d.T.dot(d) / d.T.dot(Q).dot(d)
+
+        z = d.dot(d) 
+        n = d.dot(Q).dot(d)
+        optimalStep = z/float(n)
         optimumNext = optimumNow + optimalStep * d
         
         stepsTaken.insert(0,optimumNow)
