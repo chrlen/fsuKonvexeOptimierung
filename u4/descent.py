@@ -71,11 +71,11 @@ def orCriterias(Q, q, c, x_thisTime, x_nextTime, epsilon, epsilon2, epsilon3):
                 return False
 
 
-def simpleGradientDescentQU(Q, q, c, startAt,
+def simpleGradientDescent(Q, q, c, startAt,
                             epsilon=(1/(10**6)**2 ),
-                            epsilon2=1/(10**6),
-                            epsilon3=1/(10**6),
-                            maxit=9,
+                            epsilon2=1/float(10**6),
+                            epsilon3=1/float(10**6),
+                            maxit=1000,
                             verbose=True
                             ):
     optimumNow = startAt
@@ -120,8 +120,72 @@ def simpleGradientDescentQU(Q, q, c, startAt,
         optimumNow = optimumNext
 
 
-def conjugateGradientDescentQU(Q, q, c, startAt, epsilon, maxit=10, plot=True, verbose=True):
-    print("done!")
+def conjugateGradientDescent(Q, q, c, startAt,
+                            epsilon=(1/(10**6)**2 ),
+                            epsilon2=(1/float(10**6)),
+                            epsilon3=(1/float(10**6)),
+                            maxit=3,
+                            verbose=True
+                            ):
+    optimumNow = startAt
+    print(epsilon)
+    dNow = -1 * evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q)
+    print("dNow: " + str(dNow))
+    if verbose:
+        print("Starting at: " + str(startAt))
+        print("epsilon: " + str(epsilon))
+        print("epsilon2: " + str(epsilon2))
+        print("epsilon3: " + str(epsilon3))
+    stepsTaken = list()
+
+
+    finished = False
+    iterations = 0
+
+    while not finished:     
+        #Berechne optimale Schrittweite
+        sw_z = (-1 * dNow).dot(dNow)
+        #print(sw_z) 
+        sw_n = dNow.dot(Q).dot(dNow)
+        #print(sw_n) 
+        optimalStep = sw_z/float(sw_n)
+
+        #Berechne naechstes Optimum
+        optimumNext = optimumNow + optimalStep * dNow
+        #print(optimumNext)
+        #Berechne Suchrichtung
+        sr_z = evalFirstOrderGradientOfQuadraticForm(optimumNext,Q,q)
+        #print(sr_z)
+        sr_n = evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q)
+        #print(sr_n)
+        beta = npl.norm(sr_z)**2 / npl.norm(sr_n)**2
+
+        dNext = (-1 * sr_z) + beta * dNow
+
+        stepsTaken.insert(0,optimumNow)
+
+        if verbose:
+            print("---- i =  " + str(iterations) + " ----")
+            print("x_i: " + str(optimumNow))
+            print("f(x_i): " + str(evalQuadraticForm(optimumNow,Q,q,c)))
+            print("-df(x_i): " + str(-1 * evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q)))
+            print("f(x_i+1): " + str(optimumNext))
+            print("dNow: " + str(dNow))
+            print("beta: " + str(beta))
+            print("Optimal step: " + str(optimalStep))
+            print("")
+
+        if iterations == maxit:
+            if verbose:
+                print("Maximum number of iterations reached: " + str(maxit))
+            return(stepsTaken)
+        #if orCriterias(Q, q, c, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
+        #    return(stepsTaken)
+
+        iterations += 1
+        optimumNow = optimumNext
+        dNow = dNext
+
 
 
 Q = np.diag([4, 2])
@@ -139,8 +203,8 @@ print("")
 #startAt = np.repeat(10,5)
 startAt = np.array([5, -5])
 
-simpleGradientOptimum = simpleGradientDescentQU(Q, q, c, startAt, 0.00001)
-plotFunction(Q,q,c,-6,8,-6,8,simpleGradientOptimum,"Simple gradient descent path")
+#simpleGradientOptimum = simpleGradientDescent(Q, q, c, startAt, 0.00001)
+#plotFunction(Q,q,c,-6,8,-6,8,simpleGradientOptimum,"Simple gradient descent path")
 
-# conjugateGradientOptimum = conjugateGradientDescentQU(
-#    Q, q, c, startAt, 0.00001)
+conjugateGradientOptimum = conjugateGradientDescent(Q, q, c, startAt, 0.00001)
+#plotFunction(Q,q,c,-6,8,-6,8,conjugateGradientOptimum,"Simple gradient descent path")
