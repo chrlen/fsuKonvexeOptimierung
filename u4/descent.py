@@ -92,8 +92,8 @@ def simpleGradientDescent(Q, q, c, startAt,
 
     while not finished:     
         d = -1 * evalFirstOrderGradientOfQuadraticForm(optimumNow,Q,q)
-
-        z = d.dot(d) 
+        
+        z = d.dot(d)
         n = d.dot(Q).dot(d)
         optimalStep = z/float(n)
         optimumNext = optimumNow + optimalStep * d
