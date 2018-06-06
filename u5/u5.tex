@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage[german]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\geometry{top=20mm, left=20mm, right=10mm, bottom=15mm}
+
+
+\newcommand{\hr}{\begin{center} \line(1,0){450} \end{center}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{^\mathsf{T}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator{\co}{co}
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\Proj}{Pr}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\midd}{\mathrel{}\middle|\mathrel{}}
+
+
+\pagestyle{fancy}
+\lhead{Christian Lengert}
+\rhead{\today}
+\chead{153767}
+%\rfoot{Page \thepage}
+
+\begin{document}
+
+\begin{center}
+	\section*{Konvexe Optimierung}
+	\subsection*{5. Übungsserie}
+\end{center}
+
+\subsubsection*{Aufgabe 29}
+\begin{equation}
+f_1(x) = \sum\limits_{i=1}^n x_i = \norm{x}^2
+\end{equation}
+Zu zeigen: $f_1$ ist gleichmäßig konvex mit Konvexitätsparameter $2$. $f_1$ ist gleichmäßig konvex wenn gilt:
+\begin{equation}
+(1-t)\norm{x}^2 + t \norm{x}^2 \geq \norm{(1-t)x + ty}^2 + t(1-t)\mu \norm{x -y}^2
+\end{equation}
+\end{document}
