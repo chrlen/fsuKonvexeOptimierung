@@ -44,7 +44,7 @@ def df_exp(x):
     return(np.array([dx_0, dx_1]))
 
 
-startAt = np.array([0.5, -0.9])
+startAt = np.array([1,1])
 
 exp_optimum = dc.gradientDescentArmijoStepwidth(
     f_exp,
@@ -53,6 +53,8 @@ exp_optimum = dc.gradientDescentArmijoStepwidth(
     maxit=MAXIT,
     verbose=VERBOSE)
 print(exp_optimum)
+
 dc.plotFunction(f_exp,-20,20,-20,20,exp_optimum,"Armijo gradient descent path")
+
 dc.plotConvergence(f_exp,exp_optimum,'Convergece of Gradient Descent with Armijo-Stepwidth on Sum of Exponentials');
 

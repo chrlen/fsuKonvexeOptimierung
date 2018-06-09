@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage[german]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{automata,positioning}
+\geometry{top=20mm, left=20mm, right=10mm, bottom=15mm}
+
+
+\newcommand{\hr}{\begin{center} \line(1,0){450} \end{center}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{^\mathsf{T}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator{\co}{co}
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\Proj}{Pr}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\midd}{\mathrel{}\middle|\mathrel{}}
+
+
+\pagestyle{fancy}
+\lhead{Christian Lengert}
+\rhead{\today}
+\chead{153767}
+%\rfoot{Page \thepage}
+
+\begin{document}
+
+\begin{center}
+	\section*{Konvexe Optimierung}
+	\subsection*{5. Übungsserie}
+\end{center}
+
+\subsubsection*{Aufgabe 33}
+
+ \begin{align*}
+ h_\delta(x,y) 	&= \sum\limits_i \delta^2 \left( \sqrt{1+\left( \frac { \xi_i x_0 + x_1 -\eta_i}{\delta} \right)^2} -1 \right)\\
+&= \sum\limits_i \delta^2 \left( \sqrt{1+ \frac {\xi_i^2 x_0^2 + 2 \xi_i x_0 x_1 - \xi_i x_0 \eta_i + x_1^2 -x_1 \eta_i -\xi_i x_0 \eta_i - \eta_i x_1 + \eta_i^2}{\delta^2}} -1 \right)\\
+\end{align*}
+\end{document}

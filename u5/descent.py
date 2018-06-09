@@ -46,7 +46,7 @@ def plotFunction(f,
 
 def plotConvergence(f,path,title):
     opt = path[0]
-    dist = list(map(lambda x: np.log(npl.norm(x - opt) +1),path))
+    dist = list(map(lambda x: np.log(abs(x - opt) +1),path))
     plt.plot(list(reversed(dist)))
     plt.title(title)
     plt.show()
