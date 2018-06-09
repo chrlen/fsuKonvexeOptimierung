@@ -33,3 +33,4 @@ conjugateGradientOptimum = dc.conjugateGradientDescent(Q, q, c, startAt, 0.00001
 dc.plotFunction(Q,q,c,-6,8,-6,8,conjugateGradientOptimum,"Conjugate gradient descent path")
 print("Das mit dem Konjugierte-Gradientenverfahren ermittelte Minumum liegt bei: " + str(conjugateGradientOptimum[0]))
 print("Das Verfahren hat " + str(len(conjugateGradientOptimum)) + " Schritte durchlaufen.")
+

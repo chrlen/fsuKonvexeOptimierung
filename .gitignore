@@ -244,3 +244,7 @@ TSWLatexianTemp*
 
 # generated if using elsarticle.cls
 *.spl
+
+__pycache__
+
+
