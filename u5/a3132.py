@@ -5,8 +5,9 @@ import pandas as pd
 from math import exp
 from functools import partial
 # Global
-MAXIT = 1000
-VERBOSE = False
+MAXIT = 100
+VERBOSE = True
+SCALE = 0.000001
 
 
 # Linear Regression
@@ -35,15 +36,17 @@ dc.plotConvergence(f_reg, tvSalesParams,
 
 # Exponential Function
 def f_exp(x):
-    return(	exp(x[0] + 3 * x[1] - 0.1) + exp(x[0] - 3 * x[1] - 0.1) + exp(-1 * x[0] - 0.1))
+    res = exp(x[0] + 3 * x[1] - 0.1) + exp(x[0] - 3 * x[1] - 0.1) + exp(-1 * x[0] - 0.1)
+    return(SCALE * res)
+
 
 def df_exp(x):
     dx_0 = exp(x[0] + 3 * x[1] - 0.1) + exp(x[0] - 3 * x[1] - 0.1) - exp(-1 * x[0] - 0.1)
     dx_1 = exp(x[0] + 3 * x[1] - 0.1) * 3 + exp(x[0] - 3 * x[1] - 0.1) * 3
-    return(np.array([dx_0, dx_1]))
+    return(np.array([ SCALE * dx_0, SCALE * dx_1]))
 
 
-startAt = np.array([1, 1])
+startAt = np.array([4, 4])
 
 exp_optimum = dc.gradientDescentArmijoStepwidth(
     f_exp,
@@ -52,7 +55,7 @@ exp_optimum = dc.gradientDescentArmijoStepwidth(
     maxit=MAXIT,
     verbose=VERBOSE)
 
-dc.plotFunction(f_exp, -20, 20, -20, 20, exp_optimum,
+dc.plotFunction(f_exp, -5, 5, -5, 5, exp_optimum,
                 "Armijo gradient descent path")
 
 dc.plotConvergence(f_exp, exp_optimum,

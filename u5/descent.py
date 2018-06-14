@@ -122,7 +122,7 @@ def gradientDescentArmijoStepwidth(
         print("epsilon: " + str(epsilon))
         print("epsilon2: " + str(epsilon2))
         print("epsilon3: " + str(epsilon3))
-        print("f(x) | df(x) | sigma ")
+        print("x_i | x_i+1 |f(x_i) | df(x) | sigma ")
     finished = False
     stepsTaken = list()
     stepsTaken.insert(0, optimumNow)
@@ -146,7 +146,7 @@ def gradientDescentArmijoStepwidth(
         stepsTaken.insert(0, optimumNext)
         
         if verbose:
-            print(str(optimumNow) + str(optimumNext) + str(f(optimumNow)) + " | " + str(df(optimumNow)) + " | " + str(sigma_i))
+            print(str(optimumNow) + " | " + str(optimumNext) +" | " + str(f(optimumNow)) + " | " + str(df(optimumNow)) + " | " + str(sigma_i))
         if orCriterias(f, df, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
             if verbose:
                 print("Gradient descent with Armijo Stepwidth took: " +
