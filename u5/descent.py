@@ -46,142 +46,26 @@ def plotFunction(f,
 
 def plotConvergence(f,path,title):
     opt = path[0]
-    dist = list(map(lambda x: np.log(abs(x - opt) +1),path))
-    plt.plot(list(reversed(dist)))
+    dist = list(map(lambda x: np.log(npl.norm(x - opt,ord=1)+1),path))
+    points = list(reversed(dist))
+    plt.plot(points)
     plt.title(title)
     plt.show()
-
 
 def crit1(fx_thisTime, fx_nextTime, epsilon):
     return(fx_thisTime - fx_nextTime <= epsilon * max(1, abs(fx_thisTime)))
 
-
 def crit2(x_thisTime, x_nextTime, epsilon2):
     return(npl.norm(x_nextTime - x_thisTime) <= epsilon2 * max(1, npl.norm(x_thisTime)))
 
-
 def crit3(fx_thisTime, dfx_thisTime, epsilon3):
     return(npl.norm(dfx_thisTime) <= epsilon3 * max(1, np.abs(fx_thisTime)))
-
 
 def orCriterias(f, df, x_thisTime, x_nextTime, epsilon, epsilon2, epsilon3):
     fx_thisTime = f(x_thisTime)
     fx_nextTime = f(x_nextTime)
     dfx_thisTime = df(x_thisTime)
     return crit1(fx_thisTime, fx_nextTime, epsilon) or crit2(x_thisTime, x_nextTime, epsilon2) or crit3(fx_thisTime, dfx_thisTime, epsilon3)
-
-def simpleGradientDescent(Q, q, c, startAt,
-                          epsilon=(1 / (10**6)**2),
-                          epsilon2=1 / float(10**6),
-                          epsilon3=1 / float(10**6),
-                          maxit=1000,
-                          verbose=True
-                          ):
-    optimumNow = startAt
-    if verbose:
-        print("Starting at: " + str(startAt))
-        print("epsilon: " + str(epsilon))
-        print("epsilon2: " + str(epsilon2))
-        print("epsilon3: " + str(epsilon3))
-    stepsTaken = list()
-
-    finished = False
-    iterations = 0
-
-    while not finished:
-        d = -1 * evalFirstOrderGradientOfQuadraticForm(optimumNow, Q, q)
-
-        z = d.dot(d)
-        n = d.dot(Q).dot(d)
-        optimalStep = z / float(n)
-        optimumNext = optimumNow + optimalStep * d
-
-        stepsTaken.insert(0, optimumNow)
-
-        if verbose:
-            print("---- i =  " + str(iterations) + " ----")
-            print("x_i: " + str(optimumNow))
-            print("f(x_i): " + str(evalQuadraticForm(optimumNow, Q, q, c)))
-            print("-df(x_i): " + str(-1 *
-                                     evalFirstOrderGradientOfQuadraticForm(optimumNow, Q, q)))
-            print("d: " + str(d))
-            print("Optimal step: " + str(optimalStep))
-            print("")
-
-        if iterations == maxit:
-            if verbose:
-                print("Maximum number of iterations reached: " + str(maxit))
-            return(stepsTaken)
-        if orCriterias(f, df, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
-            return(stepsTaken)
-
-        iterations += 1
-        optimumNow = optimumNext
-
-def conjugateGradientDescent(Q, q, c, startAt,
-                             epsilon=(1 / (10**6)**2),
-                             epsilon2=(1 / float(10**6)),
-                             epsilon3=(1 / float(10**6)),
-                             maxit=3,
-                             verbose=True
-                             ):
-    optimumNow = startAt
-    dNow = -1 * evalFirstOrderGradientOfQuadraticForm(optimumNow, Q, q)
-    if verbose:
-        print("Starting at: " + str(startAt))
-        print("epsilon: " + str(epsilon))
-        print("epsilon2: " + str(epsilon2))
-        print("epsilon3: " + str(epsilon3))
-    stepsTaken = list()
-
-    finished = False
-    iterations = 0
-
-    while not finished:
-        # Berechne optimale Schrittweite
-        sw_z = evalFirstOrderGradientOfQuadraticForm(
-            optimumNow, Q, q).dot(dNow)
-        sw_n = dNow.dot(Q).dot(dNow)
-        optimalStep = -1 * sw_z / float(sw_n)
-
-        # Berechne naechstes Optimum
-        optimumNext = optimumNow + optimalStep * dNow
-        # Berechne Suchrichtung
-        sr_z = evalFirstOrderGradientOfQuadraticForm(optimumNext, Q, q)
-        sr_z_norm22 = npl.norm(sr_z)**2
-        sr_n = evalFirstOrderGradientOfQuadraticForm(optimumNow, Q, q)
-        sr_n_norm22 = npl.norm(sr_n)**2
-        beta = sr_z_norm22 / sr_n_norm22
-        dNext = (-1 * sr_z) + beta * dNow
-
-        stepsTaken.insert(0, optimumNow)
-
-        if verbose:
-            print("---- i =  " + str(iterations) + " ----")
-            print("x_i: " + str(optimumNow))
-            print("f(x_i): " + str(evalQuadraticForm(optimumNow, Q, q, c)))
-            print("-df(x_i): " + str(-1 *
-                                     evalFirstOrderGradientOfQuadraticForm(optimumNow, Q, q)))
-            print("x_i+1: " + str(optimumNext))
-            print("f(x_i+1): " + str(evalQuadraticForm(optimumNext, Q, q, c)))
-            print("-df(x_i+1): " + str(-1 *
-                                       evalFirstOrderGradientOfQuadraticForm(optimumNext, Q, q)))
-            print("dNow: " + str(dNow))
-            print("beta: " + str(beta))
-            print("Optimal step: " + str(optimalStep))
-            print("")
-
-        if iterations == maxit:
-            if verbose:
-                print("Maximum number of iterations reached: " + str(maxit))
-            return(stepsTaken)
-        if orCriterias(Q, q, c, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
-            return(stepsTaken)
-
-        iterations += 1
-        optimumNow = optimumNext
-        dNow = dNext
-
 
 def armijoCrit(f, df, sigma, delta, x, d):
     return(f(x + sigma * d) <= f(x) + delta * sigma * df(x).T.dot(d))
@@ -259,6 +143,7 @@ def gradientDescentArmijoStepwidth(
             verbose=False
         )
         optimumNext = optimumNow + sigma_i * d
+        stepsTaken.insert(0, optimumNext)
         
         if verbose:
             print(str(optimumNow) + str(optimumNext) + str(f(optimumNow)) + " | " + str(df(optimumNow)) + " | " + str(sigma_i))
@@ -278,5 +163,4 @@ def gradientDescentArmijoStepwidth(
             return(stepsTaken)
 
         iterations += 1
-        stepsTaken.insert(0, optimumNext)
         optimumNow = optimumNext
