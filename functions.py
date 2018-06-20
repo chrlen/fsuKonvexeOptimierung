@@ -1,7 +1,7 @@
 from functools import partial
 import numpy as np
 import pandas as pd
-
+DELTA = 0.0003
 #Helpers:
 def evalQuadraticForm(x, Q, q, c):
     return 0.5 * x.dot(Q).dot(x) + q.dot(x) + c
@@ -76,9 +76,24 @@ def pseudoHuberLossGradient(x, delta, xi, eta):
                                                                         ((pair[0] * x[0] + x[1] - pair[1]) / delta)**2) for pair in pairs])
     return(np.array([dx0, dx1]))
 
+def estimatePseudoHuberLossHessian(delta,xi,eta):
+    pairs = zip(xi,eta)
+    dx0x0 = 1
+    pairs = zip(xi,eta)
+    dx0x1 = 1
+    pairs = zip(xi,eta)
+    dx1x0 = 1
+    pairs = zip(xi,eta)
+    dx1x1 = 1
+    Q = np.vstack([[dx0x0,dx0x1],[
+        dx1x0,dx1x1]])
+    return(Q)
 data = pd.read_csv("Advertising.csv")
 eta = data['Sales']
 xi = data['TV']
 
-paritalPhl = partial(phl, delta=DELTA, eta=eta, xi=xi)
-paritaldPhl = partial(dphl, delta=DELTA, eta=eta, xi=xi)
+pseudoHuberLossHessian = estimatePseudoHuberLossHessian(DELTA,xi,eta)
+
+
+paritalPhl = partial(pseudoHuberLoss, delta=DELTA, eta=eta, xi=xi)
+paritaldPhl = partial(pseudoHuberLossGradient, delta=DELTA, eta=eta, xi=xi)
