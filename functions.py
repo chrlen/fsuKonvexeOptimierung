@@ -66,7 +66,7 @@ c = sum(eta**2)
 
 regressionFct = partial(evalQuadraticForm, Q=Q, q=q, c=c)
 regressionGradient = partial(evalFirstOrderGradientOfQuadraticForm, Q=Q, q=q)
-regressionHessian = Q
+regressionHessian = lambda x: Q
 # Exponential Function
 
 
@@ -99,6 +99,17 @@ def pseudoHuberLossGradient(x, delta, xi, eta):
                                                                         ((pair[0] * x[0] + x[1] - pair[1]) / delta)**2) for pair in pairs])
     return(np.array([dx0, dx1]))
 
+def calculatePseudoHuberHessian(x,delta,xi,eta):
+    pairs = zip(xi, eta)
+    dx0x0 = sum([ pair[0]**2 * (np.sqrt(1 + ((pair[0]*x[0]+x[1]-pair[1])/delta)**2) -    ((  (pair[0]**2 * x[0] + pair[0]*x[1] - pair[0]*pair[1]) * (pair[0]*x[0]+x[1]-pair[1]) *(pair[0]*delta + pair[0] * x[0] +x[1] - pair[1]))/(delta * np.sqrt(1+((pair[0]*x[0]+x[1]-pair[1])/delta)**2))))/(1+((pair[0]*x[0]+x[1]-pair[1])/(delta))**2) for pair in pairs])
+    pairs = zip(xi, eta)
+    dx0x1 = sum([ pair[0] * (np.sqrt(1 + ((pair[0]*x[0]+x[1]-pair[1])/delta)**2) -       ((  (pair[0]**2 * x[0] + pair[0]*x[1] - pair[0]*pair[1]) * (pair[0]*x[0]+x[1]-pair[1]) *(pair[0]*delta + pair[0] * x[0] +x[1] - pair[1]))/(delta * np.sqrt(1+((pair[0]*x[0]+x[1]-pair[1])/delta)**2))))/(1+((pair[0]*x[0]+x[1]-pair[1])/(delta))**2) for pair in pairs])
+    pairs = zip(xi, eta)
+    dx1x0 = sum([ pair[0] * (np.sqrt(1 + ((pair[0]*x[0]+x[1]-pair[1])/delta)**2) -       ((   (pair[0]*x[0]+x[1]-pair[1])**2 *(pair[0]*delta + pair[0] * x[0] +x[1] - pair[1]))/(delta * np.sqrt(1+((pair[0]*x[0]+x[1]-pair[1])/delta)**2))))/(1+((pair[0]*x[0]+x[1]-pair[1])/(delta))**2) for pair in pairs])
+    pairs = zip(xi, eta)
+    dx1x1 = sum([ (np.sqrt(1 + ((pair[0]*x[0]+x[1]-pair[1])/delta)**2) -                 ((   (pair[0]*x[0]+x[1]-pair[1])**2 *(delta + pair[0] * x[0] +x[1] - pair[1]))/(delta * np.sqrt(1+((pair[0]*x[0]+x[1]-pair[1])/delta)**2))))/(1+((pair[0]*x[0]+x[1]-pair[1])/(delta))**2) for pair in pairs])
+    Q = np.vstack([[dx0x0,dx0x1], [dx1x0,dx1x1]])
+    return Q
 
 data = pd.read_csv("Advertising.csv")
 eta = data['Sales']
@@ -106,16 +117,15 @@ xi = data['TV']
 
 paritalPhl = partial(pseudoHuberLoss, delta=DELTA, eta=eta, xi=xi)
 paritaldPhl = partial(pseudoHuberLossGradient, delta=DELTA, eta=eta, xi=xi)
+pseudoHuberHessian = partial(calculatePseudoHuberHessian,delta=DELTA, eta=eta, xi=xi)
 
 
 #
 def squarerootExample(x):
     return(np.sqrt(1 + x**2))
 
-
 def squarerootExampleGradient(x):
     return(x / squarerootExample(x))
-
 
 def squarerootExampleHessian(x):
     return((1 + x**2)**(-3 / 2))

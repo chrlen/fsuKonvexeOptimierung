@@ -174,7 +174,7 @@ def gradientDescentArmijoStepwidth(
         optimumNow = optimumNext
 
 
-def approximateGradient(x,f,epsilon=0.0001):
+def approximateGradient(x, f, epsilon=0.0001):
     n = x.shape[0]
     h = np.array([epsilon * max(1, abs(y)) for y in x])
     g = np.zeros(n)
@@ -184,11 +184,12 @@ def approximateGradient(x,f,epsilon=0.0001):
         g[k] = (f(x + d) - f(x - d)) / 2 * h[k]
     return(g)
 
-def checkGradient(x, f, df, epsilon=0.0001):
-    return (npl.norm(df(x) - approximateGradient(x,f,epsilon)) / (npl.norm(df(x)) + 1)) > epsilon
+
+def checkGradient(x, f, df, epsilon=0.001):
+    return (npl.norm(df(x) - approximateGradient(x, f, epsilon)) / (npl.norm(df(x)) + 1)) > epsilon
 
 
-def approximateHessian(x,f,epsilon):
+def approximateHessian(x, f, epsilon):
     n = x.shape[0]
     h = np.array([epsilon * max(1, abs(y)) for y in x])
     H = np.zeros([n, n])
@@ -203,9 +204,7 @@ def approximateHessian(x,f,epsilon):
     return(H)
 
 def checkHessian(x, f, hf, epsilon=0.0001):
-    return npl.norm(hf - approximateHessian(x,f,epsilon)) * (npl.norm(hf) + 1) > epsilon
-
-
+    return npl.norm(hf(x) - approximateHessian(x, f, epsilon)) * (npl.norm(hf(x)) + 1) > epsilon
 def dampedNewton(
         f,
         df,
@@ -313,57 +312,61 @@ def dampedNewton(
     iterations = 1
 
     while not finished:
-        # Check gradient in first iterations
-        if iterations < checkGradientNTimes:
-            if not checkGradient(optimumNow, f, df):
-                if verbose:
-                    print("Gradient-check failed in interation: " + str(iterations))
-                return([])
-            if not checkHessian(optimumNow, f, hf):
-                if verbose:
-                    print("Hessian-check failed in interation: " + str(iterations))
-                return([])
+            # Check gradient in first iterations
+            if iterations < checkGradientNTimes:
+                if not checkGradient(optimumNow, f, df):
+                    if verbose:
+                        print("Gradient-check failed in interation: " + str(iterations))
+                    return([])
+                if not checkHessian(optimumNow, f, hf):
+                    if verbose:
+                        print("Hessian-check failed in interation: " + str(iterations))
+                    return([])
 
-        id = np.eye(hf.shape[0], hf.shape[1])
-        inv = npl.solve(hf, id)
-        d = -1 * inv.dot(optimumNow) * df(optimumNow)
+            hessian = hf(optimumNow)
+            if len(hessian.shape) == 1:
+                d = -1 * 1/(hessian) * optimumNow * df(optimumNow)
+            else:
+                id = np.eye(hessian.shape[0], hessian.shape[1])
+                inv = npl.solve(hessian, id)
+                d = -1 * inv.dot(optimumNow) * df(optimumNow)
 
-        sigma_i = armijoStepwidth(
-            x=optimumNow,
-            f=f,
-            df=df,
-            d=d,
-            beta1=beta1,
-            beta2=beta2,
-            delta=delta,
-            gamma=gamma,
-            sigma_0=sigma_0,
-            verbose=False
-        )
+            sigma_i = armijoStepwidth(
+                x=optimumNow,
+                f=f,
+                df=df,
+                d=d,
+                beta1=beta1,
+                beta2=beta2,
+                delta=delta,
+                gamma=gamma,
+                sigma_0=sigma_0,
+                verbose=False
+            )
 
-        optimumNext = optimumNow + sigma_i * d
-        #optimumNext = optimumNow +  d
+            optimumNext = optimumNow + sigma_i * d
+            #optimumNext = optimumNow +  d
 
-        stepsTaken.insert(0, optimumNext)
+            stepsTaken.insert(0, optimumNext)
 
-        if verbose:
-            print(str(optimumNow) + " | " + str(f(optimumNow)) + " | " + str(df(optimumNow)) + " | " + str(hf.dot(optimumNow)) + " | " + str(sigma_i) + " | " + str(d))
-
-        if orCriterias(f, df, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
             if verbose:
-                print("Gradient descent with Armijo Stepwidth took: " +
-                      str(iterations) + " iterations.")
-                print("Gradient descent with Armijo Stepwidth found: " +
-                      str(optimumNext) + ".")
-            return(stepsTaken)
-        if iterations > maxit:
-            if verbose:
-                print("Gradient descent with Armijo Stepwidth took: " +
-                      str(iterations) + " iterations.")
-                print("Gradient descent with Armijo Stepwidth found: " +
-                      str(optimumNext) + ".")
-            return(stepsTaken)
+                print(str(optimumNow) + " | " + str(f(optimumNow)) + " | " + str(df(optimumNow)) + " | " + str(hf(optimumNow)) + " | " + str(sigma_i) + " | " + str(d))
 
-        iterations += 1
-        optimumNow=optimumNext
+            if orCriterias(f, df, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
+                if verbose:
+                    print("Gradient descent with Armijo Stepwidth took: " +
+                          str(iterations) + " iterations.")
+                    print("Gradient descent with Armijo Stepwidth found: " +
+                          str(optimumNext) + ".")
+                return(stepsTaken)
+            if iterations > maxit:
+                if verbose:
+                    print("Gradient descent with Armijo Stepwidth took: " +
+                          str(iterations) + " iterations.")
+                    print("Gradient descent with Armijo Stepwidth found: " +
+                          str(optimumNext) + ".")
+                return(stepsTaken)
+
+            iterations += 1
+            optimumNow=optimumNext
 

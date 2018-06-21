@@ -247,4 +247,5 @@ TSWLatexianTemp*
 
 __pycache__
 Advertising.csv
-
+venv
+.idea
