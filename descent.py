@@ -15,7 +15,7 @@ def evalField(f, X, Y):
     x_range = range(0, X.shape[0])
     y_range = range(0, X.shape[1])
     Z = np.zeros(X.shape)
-
+    print(Z)
     for x in x_range:
         for y in y_range:
             v = np.array([X[y, x], Y[y, x]])
@@ -32,8 +32,9 @@ def plotFunction(f,
     x = np.arange(xMin, xMax, 0.1)
     y = np.arange(yMin, yMax, 0.1)
     X, Y = np.meshgrid(x, y)
+    print(X,Y)
     Z = evalField(f, X, Y)
-
+    print(Z)
     plt.figure()
     plt.contourf(X, Y, Z)
     for i in range(1, len(path)):
@@ -174,7 +175,7 @@ def gradientDescentArmijoStepwidth(
         optimumNow = optimumNext
 
 
-def approximateGradient(x, f, epsilon=0.0001):
+def approximateGradient(x, f, epsilon=0.01):
     n = x.shape[0]
     h = np.array([epsilon * max(1, abs(y)) for y in x])
     g = np.zeros(n)
@@ -185,8 +186,11 @@ def approximateGradient(x, f, epsilon=0.0001):
     return(g)
 
 
-def checkGradient(x, f, df, epsilon=0.001):
-    return (npl.norm(df(x) - approximateGradient(x, f, epsilon)) / (npl.norm(df(x)) + 1)) > epsilon
+def checkGradient(x, f, df, epsilon=0.00000001):
+    app = approximateGradient(x, f, epsilon)
+    print(app,df(x))
+    return True
+    #return (npl.norm(df(x) - app) / (npl.norm(df(x)) + 1)) > epsilon
 
 
 def approximateHessian(x, f, epsilon):
@@ -222,6 +226,7 @@ def dampedNewton(
         gamma=(1 / 10**4),
         sigma_0=1,
         maxit=1000,
+        maxitArmijo=30,
         verbose=True):
 
     optimumNow = startAt
@@ -250,12 +255,15 @@ def dampedNewton(
 
             hessian = hf(optimumNow)
             if len(hessian.shape) == 1:
+                print("hessian:",hessian)
                 d = -1 * 1/(hessian) * optimumNow * df(optimumNow)
             else:
                 id = np.eye(hessian.shape[0], hessian.shape[1])
-                inv = npl.solve(hessian, id)
-                d = -1 * inv.dot(optimumNow) * df(optimumNow)
+                # Condition problem
+                hessian += 0.0001 * hessian
 
+                inv = npl.solve(hessian, id)
+                d = -1 * inv.dot(df(optimumNow))
             sigma_i = armijoStepwidth(
                 x=optimumNow,
                 f=f,
@@ -266,31 +274,22 @@ def dampedNewton(
                 delta=delta,
                 gamma=gamma,
                 sigma_0=sigma_0,
+                maxit=maxitArmijo,
                 verbose=True
             )
-            print("Optimum now)",optimumNow)
-            print("Optimum now)", type(optimumNow))
-            print("Sigma*d: ",sigma_i*d)
-            print("Sigma*d: ", type(sigma_i * d))
-            print("Sum",optimumNow.__add__(sigma_i * d))
-
 
             optimumNext = optimumNow + sigma_i * d
-
-            #optimumNext = optimumNow +  d
-
             stepsTaken.insert(0, optimumNext)
 
             if verbose:
                 print(str(optimumNow) + " | " + str(f(optimumNow)) + " | " + str(df(optimumNow)) + " | " + str(hf(optimumNow)) + " | " + str(sigma_i) + " | " + str(d))
-
-            # if orCriterias(f, df, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
-            #     if verbose:
-            #         print("Gradient descent with Armijo Stepwidth took: " +
-            #               str(iterations) + " iterations.")
-            #         print("Gradient descent with Armijo Stepwidth found: " +
-            #               str(optimumNext) + ".")
-            #     return(stepsTaken)
+            if orCriterias(f, df, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
+                if verbose:
+                    print("Gradient descent with Armijo Stepwidth took: " +
+                          str(iterations) + " iterations.")
+                    print("Gradient descent with Armijo Stepwidth found: " +
+                          str(optimumNext) + ".")
+                return(stepsTaken)
             if iterations > maxit:
                 if verbose:
                     print("Gradient descent with Armijo Stepwidth took: " +

@@ -46,14 +46,13 @@ def spellucci(x):
 
 
 # Simple quadratic problem example:
-Q = np.diag([4, 2])
-q = np.array([-4, -2])
-c = 3
+simpleQuadraticQ = np.diag([4, 2])
+simpleQuadraticq = np.array([-4, -2])
+simpleQuadraticc = 3
 
-simpleQuadraticFct = partial(evalQuadraticForm, Q=Q, q=q, c=c)
-simpleQuadraticGradient = partial(
-    evalFirstOrderGradientOfQuadraticForm, Q=Q, q=q)
-
+simpleQuadraticFct = partial(evalQuadraticForm, Q=simpleQuadraticQ, q=simpleQuadraticq, c=simpleQuadraticc)
+simpleQuadraticGradient = partial(evalFirstOrderGradientOfQuadraticForm, Q=simpleQuadraticQ, q=simpleQuadraticq)
+simpleQuadraticHessian = lambda x: simpleQuadraticQ
 # Linear Regression with TV-Sales data:
 data = pd.read_csv("Advertising.csv")
 eta = data['Sales']
@@ -81,14 +80,11 @@ def df_exp(x):
     return(np.array([dx_0, dx_1]))
 
 # Robust regression with pseudo-huber-loss
-
-
 def pseudoHuberLoss(x, delta, xi, eta):
     pairs = zip(xi, eta)
     res = delta**2 * sum(map(lambda pair: np.sqrt(1 + (
         (pair[0] * x[0] + x[1] - pair[1]) / delta)**2)  , pairs)) - delta**2 * xi.shape[0]
     return(res)
-
 
 def pseudoHuberLossGradient(x, delta, xi, eta):
     pairs = zip(xi, eta)
@@ -119,8 +115,6 @@ paritalPhl = partial(pseudoHuberLoss, delta=DELTA, eta=eta, xi=xi)
 paritaldPhl = partial(pseudoHuberLossGradient, delta=DELTA, eta=eta, xi=xi)
 pseudoHuberHessian = partial(calculatePseudoHuberHessian,delta=DELTA, eta=eta, xi=xi)
 
-
-#
 def squarerootExample(x):
     return(np.sqrt(1 + x**2))
 
@@ -129,3 +123,13 @@ def squarerootExampleGradient(x):
 
 def squarerootExampleHessian(x):
     return((1 + x**2)**(-3 / 2))
+
+#L1 SVM
+#L2 SVM
+#Logistic SVM
+
+def lsvm(x,y,w,b,c=10):
+    pairs = zip(X,Y)
+    res = 0.5 * w.T.dot(w) + c * sum([np.log(1+ np.exp(-pair[1] * (w.dot(pair[0]) + b))) for pair in pairs])
+    return(res)
+
