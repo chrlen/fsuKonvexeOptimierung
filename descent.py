@@ -2,14 +2,11 @@ import numpy as np
 import numpy.linalg as npl
 import matplotlib.pyplot as plt
 
-
 def evalQuadraticForm(x, Q, q, c):
     return 0.5 * x.dot(Q).dot(x) + q.dot(x) + c
 
-
 def evalFirstOrderGradientOfQuadraticForm(x, Q, q):
     return Q.dot(x) + q
-
 
 def evalField(f, X, Y):
     x_range = range(0, X.shape[0])
@@ -22,7 +19,6 @@ def evalField(f, X, Y):
             Z[y, x] = f(v)
 
     return Z
-
 
 def plotFunction(f,
                  xMin, xMax,
@@ -45,7 +41,6 @@ def plotFunction(f,
     plt.title(title)
     plt.show()
 
-
 def plotConvergence(f, path, title):
     opt = path[0]
     dist = list(map(lambda x: np.log(npl.norm(x - opt, ord=1) + 1), path))
@@ -54,18 +49,14 @@ def plotConvergence(f, path, title):
     plt.title(title)
     plt.show()
 
-
 def crit1(fx_thisTime, fx_nextTime, epsilon):
     return(fx_thisTime - fx_nextTime <= epsilon * max(1, abs(fx_thisTime)))
-
 
 def crit2(x_thisTime, x_nextTime, epsilon2):
     return(npl.norm(x_nextTime - x_thisTime) <= epsilon2 * max(1, npl.norm(x_thisTime)))
 
-
 def crit3(fx_thisTime, dfx_thisTime, epsilon3):
     return(npl.norm(dfx_thisTime) <= epsilon3 * max(1, np.abs(fx_thisTime)))
-
 
 def orCriterias(f, df, x_thisTime, x_nextTime, epsilon, epsilon2, epsilon3):
     fx_thisTime = f(x_thisTime)
@@ -73,10 +64,8 @@ def orCriterias(f, df, x_thisTime, x_nextTime, epsilon, epsilon2, epsilon3):
     dfx_thisTime = df(x_thisTime)
     return crit1(fx_thisTime, fx_nextTime, epsilon) or crit2(x_thisTime, x_nextTime, epsilon2) or crit3(fx_thisTime, dfx_thisTime, epsilon3)
 
-
 def armijoCrit(f, df, sigma, delta, x, d):
     return(f(x + sigma * d) <= f(x) + delta * sigma * df(x).T.dot(d))
-
 
 def armijoStepwidth(
         x,

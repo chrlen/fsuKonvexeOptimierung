@@ -129,7 +129,7 @@ def squarerootExampleHessian(x):
 #Logistic SVM
 
 def lsvm(x,y,w,b,c=10):
-    pairs = zip(X,Y)
+    pairs = zip(x,y)
     res = 0.5 * w.T.dot(w) + c * sum([np.log(1+ np.exp(-pair[1] * (w.dot(pair[0]) + b))) for pair in pairs])
     return(res)
 

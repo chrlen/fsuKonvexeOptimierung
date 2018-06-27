@@ -18,9 +18,14 @@ for subset in subsets:
     #Train L1 SVM
     #Train L2 SVM
     #Train Logistic SVM with Newton-Method
-
+    logProblem = dc.NewtonOptimizationProblem(
+        {'f':fct.lsvm,
+         'df':fct.dlsvm,
+         'hf:'fct.hlsvm,
+         'x_0'np.array([0,0])
+         }
+    )
     #Calculate Error
-
 
 #print(fct.lsvm(X_train,X_test,np.array([1,1,1,1]),1))
 
