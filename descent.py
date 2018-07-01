@@ -76,7 +76,6 @@ def orCriterias(f, df, x_thisTime, x_nextTime, epsilon, epsilon2, epsilon3):
 def armijoCrit(f, df, sigma, delta, x, d):
     return(f(x + sigma * d) <= f(x) + delta * sigma * df(x).T.dot(d))
 
-
 def armijoStepwidth(
         x,
         f,
@@ -174,7 +173,7 @@ def gradientDescentArmijoStepwidth(
         optimumNow = optimumNext
 
 
-def approximateGradient(x,f,epsilon=0.0001):
+def approximateGradient(x, f, epsilon=0.0000001):
     n = x.shape[0]
     h = np.array([epsilon * max(1, abs(y)) for y in x])
     g = np.zeros(n)
@@ -184,11 +183,12 @@ def approximateGradient(x,f,epsilon=0.0001):
         g[k] = (f(x + d) - f(x - d)) / 2 * h[k]
     return(g)
 
-def checkGradient(x, f, df, epsilon=0.0001):
-    return (npl.norm(df(x) - approximateGradient(x,f,epsilon)) / (npl.norm(df(x)) + 1)) > epsilon
+
+def checkGradient(x, f, df, epsilon=0.0000001):
+    return (npl.norm(df(x) - approximateGradient(x, f, epsilon)) / (npl.norm(df(x)) + 1)) > epsilon
 
 
-def approximateHessian(x,f,epsilon):
+def approximateHessian(x, f, epsilon):
     n = x.shape[0]
     h = np.array([epsilon * max(1, abs(y)) for y in x])
     H = np.zeros([n, n])
@@ -202,8 +202,9 @@ def approximateHessian(x,f,epsilon):
                        f(x - d_one - d_two) + f(x - d_one + d_two)) / 4 * h[k] * h[l]
     return(H)
 
+
 def checkHessian(x, f, hf, epsilon=0.0001):
-    return npl.norm(hf - approximateHessian(x,f,epsilon)) * (npl.norm(hf) + 1) > epsilon
+    return npl.norm(hf - approximateHessian(x, f, epsilon)) * (npl.norm(hf) + 1) > epsilon
 
 
 def dampedNewton(
@@ -222,13 +223,14 @@ def dampedNewton(
         sigma_0=1,
         maxit=1000,
         verbose=True):
+
     optimumNow = startAt
     if verbose:
         print("Starting at: " + str(startAt))
         print("epsilon: " + str(epsilon))
         print("epsilon2: " + str(epsilon2))
         print("epsilon3: " + str(epsilon3))
-        print("f(x) | df(x) | sigma ")
+        print(" x | f(x) | df(x) | hf(x) | simga_i | delta_i |")
     finished = False
     stepsTaken = list()
     stepsTaken.insert(0, optimumNow)
@@ -245,7 +247,11 @@ def dampedNewton(
                 if verbose:
                     print("Hessian-check failed in interation: " + str(iterations))
                 return([])
-        d = -1 * df(optimumNow)
+
+        id = np.eye(hf.shape[0], hf.shape[1])
+        inv = npl.solve(hf, id)
+        d = -1 * inv.dot(optimumNow) * df(optimumNow)
+
         sigma_i = armijoStepwidth(
             x=optimumNow,
             f=f,
@@ -258,12 +264,15 @@ def dampedNewton(
             sigma_0=sigma_0,
             verbose=False
         )
+
         optimumNext = optimumNow + sigma_i * d
+        #optimumNext = optimumNow +  d
+
         stepsTaken.insert(0, optimumNext)
 
         if verbose:
-            print(str(optimumNow) + str(optimumNext) + str(f(optimumNow)
-                                                           ) + " | " + str(df(optimumNow)) + " | " + str(sigma_i))
+            print(str(optimumNow) + " | " + str(f(optimumNow)) + " | " + str(df(optimumNow)) + " | " + str(hf.dot(optimumNow)) + " | " + str(sigma_i) + " | " + str(d))
+
         if orCriterias(f, df, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
             if verbose:
                 print("Gradient descent with Armijo Stepwidth took: " +
@@ -280,4 +289,4 @@ def dampedNewton(
             return(stepsTaken)
 
         iterations += 1
-        optimumNow = optimumNext
+        optimumNow=optimumNext

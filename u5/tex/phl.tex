@@ -1,4 +1,5 @@
-\documentclass{article}
+\documentclass[paper=A3, 
+   paper=landscape,]{scrartcl}
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage[german]{babel}
 \usepackage[utf8]{inputenc}
@@ -55,8 +56,6 @@
 \end{align*}
 \newcommand{\dfunca}{2\xi_i^2 x_0 + 2 \xi_i x_1 - 2\xi_i \eta_i -2 x_1 \eta_i}
 
-
-
 \begin{align}
 	\frac{\partial}{\partial x_0} h_\delta(x,y) &= \frac{\partial}{\partial x_0} \sum\limits_i^n \left(1+ \left( \frac {\z}{\delta}\right)^2 \right)^\frac{1}{2}  - \delta^2 n\\
 	&=  \sum\limits_i^n \frac{\partial}{\partial x_0} \left(1+ \left( \frac {\z}{\delta}\right)^2 \right)^\frac{1}{2}  - \frac{\partial}{\partial x_0}  \delta^2 n\\
@@ -66,31 +65,87 @@
 	&=  \sum\limits_i^n \frac{1}{2} \left(1+ \left( \frac {\z}{\delta}\right)^2 \right)^{-\frac{1}{2}} \cdot  2\left( \frac {\z}{\delta}\right) \cdot \frac{ \xi_i \cdot \delta }{\delta^2} \\
 	&=  \sum\limits_i^n \frac {\left( \frac {\z}{\delta}\right) \cdot \frac{ \xi_i \cdot \delta }{\delta^2} } {\sqrt{1+\left( \frac{\z}{\delta}\right)^2  }}  \\
 	&=  \sum\limits_i^n \frac {\left( \frac {\z}{\delta}\right) \cdot \frac{ \xi_i}{\delta} } {\sqrt{1+\left( \frac{\z}{\delta}\right)^2  }}  \\
-	&=  \sum\limits_i^n \frac {\xi_i^2 x_0 + \xi_i x_1 - \xi_i \eta_i}{\delta^2\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }} \\
+	&=  \sum\limits_i^n \frac {\xi_i^2 x_0 + \xi_i x_1 - \xi_i \eta_i}{\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }} \\
 \end{align}
 
 
 \begin{align}
 	\frac{\partial}{\partial x_1} h_\delta(x,y) &=  \sum\limits_i^n \frac {\left( \frac {\z}{\delta}\right) \cdot \frac{\delta }{\delta^2} } {\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }}  \\
 	&=  \sum\limits_i^n \frac {\frac {\z}{\delta^2} } {\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }}\\
-	&=  \sum\limits_i^n \frac {\z}{\delta^2\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }} \\
+	&=  \sum\limits_i^n \frac {\z}{\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }} \\
+\end{align}
+
+\paragraph{Hessian}
+
+\begin{align}
+H(phl) = \begin{bmatrix}
+\frac{\partial phl }{\partial x_0 \partial  x_0} & \frac{\partial phl }{\partial x_0 \partial x_1}\\
+\frac{\partial phl }{\partial x_1 \partial  x_0} & \frac{\partial phl }{\partial x_1 \partial x_1}
+\end{bmatrix}
 \end{align}
 
 
+
+
+\newcommand{\dfuncaz}{\xi_i x_0 + x_1 -\eta_i}
+%\newcommand{\dfuncan}{\sqrt{1+ \left( \frac {\z} {\delta} \right) ^2}}
+\newcommand{\dfuncan}{\left( 1+ \left( \frac {\z} {\delta} \right) ^2\right)^\frac{1}{2} }
+
+
+%& = \sum\limits_i^n \frac { \frac{\partial}{\partial x_1} \left( \z \right) \cdot  \dfuncan - \left( \z \right) \cdot  \frac{\partial}{\partial x_1} \dfuncan } {1+ \left( \frac {\z} {\delta} \right) ^2}
+
+
+\newcommand{\dfagain}{\frac{1}{2}\left( 1+ \left( \frac {\z} {\delta} \right) ^2\right)^{-\frac{1}{2}}}
+
+
+
 \begin{align*}
-	\frac{\partial}{\partial x_1} h_\delta(x,y) &=  \sum\limits_i^n \frac {\left( \frac {\z}{\delta}\right) \cdot \frac{\delta }{\delta^2} } {\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }}  \\
-	&=  \sum\limits_i^n \frac {\frac {\z}{\delta^2} } {\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }}\\
-	&=  \sum\limits_i^n \frac {\z}{\delta^2\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }} \\
+\frac{\partial phl}{\partial x_1 \partial x_0} &= \frac{\partial}{\partial x_0} \sum\limits_i^n \frac {\z}{\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }}\\
+& =  \sum\limits_i^n \frac{\partial}{\partial x_0} \frac {\z}{\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }}\\
+%&= \frac {bla}\begin{align*} {\left( blub \right)^2}
+& = \sum\limits_i^n \frac { \frac{\partial}{\partial x_0} \left( \z \right) \cdot  \dfuncan - \left( \z \right) \cdot  \frac{\partial}{\partial x_0} \dfuncan } {\left( \dfuncan \right)^2}\\
+& = \sum\limits_i^n \frac { \frac{\partial}{\partial x_0} \left( \z \right) \cdot  \dfuncan - \left( \z \right) \cdot  \frac{\partial}{\partial x_0} \dfuncan } {1+ \left( \frac {\z} {\delta} \right) ^2}\\
+& = \sum\limits_i^n \frac { \frac{\partial}{\partial x_0} \left( \z \right) \dfuncan - \left( \z \right) \cdot  \frac{\partial}{\partial x_0} \dfuncan } {1+ \left( \frac {\z} {\delta} \right) ^2}\\
+& = \sum\limits_i^n \frac {\frac{\partial}{\partial x_0} \left( \z \right) \dfuncan - \left( \z \right) \cdot \dfagain \cdot \frac{\partial}{\partial x_0} \left( 1+ \left( \frac{\xi_i x_0+x_1-\eta_i}{\delta} \right)^2 \right) } {1+ \left( \frac {\z} {\delta} \right) ^2}\\
+& = \sum\limits_i^n \frac {\frac{\partial}{\partial x_0} \left( \z \right) \dfuncan - \left( \z \right) \cdot \dfagain \cdot \frac{\partial}{\partial x_0} \left( 1+ \left( \frac{\xi_i x_0+x_1-\eta_i}{\delta} \right)^2 \right) } {1+ \left( \frac {\z} {\delta} \right) ^2}\\
+& = \sum\limits_i^n \frac {\frac{\partial}{\partial x_0} \left( \z \right) \dfuncan - \left( \z \right) \cdot \dfagain \cdot  \left( \frac{\partial}{\partial x_0}1+ \frac{\partial}{\partial x_0}\left( \frac{\xi_i x_0+x_1-\eta_i}{\delta} \right)^2 \right) } {1+ \left( \frac {\z} {\delta} \right) ^2}\\
+& = \sum\limits_i^n \frac {\frac{\partial}{\partial x_0} \left( \z \right) \dfuncan - \left( \z \right) \cdot \dfagain \cdot   \frac{\partial}{\partial x_0}\left( \frac{\xi_i x_0+x_1-\eta_i}{\delta} \right)^2 } {1+ \left( \frac {\z} {\delta} \right) ^2}\\
+& = \sum\limits_i^n \frac {\frac{\partial}{\partial x_0} \left( \z \right) \dfuncan - \left( \z \right) \cdot \dfagain \cdot  2\left( \frac{\xi_i x_0+x_1-\eta_i}{\delta} \right) \cdot  \frac{\partial}{\partial x_0} \left( \frac{\xi_i x_0+x_1-\eta_i}{\delta} \right) } {1+ \left( \frac {\z} {\delta} \right) ^2}\\
+& = \sum\limits_i^n \frac {\frac{\partial}{\partial x_0} \left( \z \right) \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 }- \frac{ \z }{\sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}}  \cdot  \frac{\xi_i x_0+x_1-\eta_i}{\delta}  \cdot  \frac{\partial}{\partial x_0} \left( \frac{\xi_i x_0+x_1-\eta_i}{\delta} \right) } {1+ \left( \frac {\z} {\delta} \right) ^2}\\
+& = \sum\limits_i^n \frac {\xi_i \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \z \right)^2 \left(\xi_i \delta  + \xi_i x_0+x_1-\eta_i\right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2}\\
 \end{align*}
 
 
+\begin{align*}
+\frac{\partial phl}{\partial x_1 \partial x_1} &= \frac{\partial}{\partial x_0} \sum\limits_i^n \frac {\z}{\sqrt{1+ \left( \frac {\z}{\delta}\right)^2  }}\\
+& = \sum\limits_i^n \frac {\frac{\partial}{\partial x_1} \left( \z \right) \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \z \right)^2\left( \frac{\partial}{\partial x_1} \left(\xi_i x_0+x_1-\eta_i \right) \delta  + \left( \xi_i x_0+x_1-\eta_i\right) \right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2}\\
+& = \sum\limits_i^n \frac {\sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \z \right)^2\left(\delta  + \xi_i x_0+x_1-\eta_i \right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2}\\
+\end{align*}
+%& = \sum\limits_i^n \frac {\frac{\partial}{\partial x_0} \left( \z \right) \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \z \right)^2\left( \frac{\partial}{\partial x_0} \left(\xi_i x_0+x_1-\eta_i \right) \delta  + \left( \xi_i x_0+x_1-\eta_i\right) \right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2}\\
+
+\begin{align*}
+\frac{\partial phl}{\partial x_0 \partial x_0} &= \frac{\partial}{\partial x_0} \sum\limits_i^n \frac {\xi_i^2x_0 + \xi_ix_1 - \xi_i \eta_i}{\sqrt{1+ \left( \frac {\z}{\delta}\right)^2 }}\\
+& = \sum\limits_i^n \frac {\xi_i^2 \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \xi_i^2x_0 + \xi_ix_1 - \xi_i \eta_i \right)\left( \z \right) \left(\xi_i \delta  +  \xi_i x_0+x_1-\eta_i \right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2}\\
+\end{align*}
+
+\begin{align*}
+\frac{\partial phl}{\partial x_0 \partial x_1} &= \frac{\partial}{\partial x_1} \sum\limits_i^n \frac {\xi_i^2x_0 + \xi_ix_1 - \xi_i \eta_i}{\sqrt{1+ \left( \frac {\z}{\delta}\right)^2 }}\\
+& = \sum\limits_i^n \frac {\xi_i  \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \xi_i^2x_0 + \xi_ix_1 - \xi_i \eta_i \right)\left( \z \right) \left( \delta  + \xi_i x_0+x_1-\eta_i \right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2}\\
+\end{align*}
+
+%& = \sum\limits_i^n \frac {\frac{\partial}{\partial x_0} \left( \xi_i^2x_0 + \xi_ix_1 - \xi_i \eta_i \right) \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \xi_i^2x_0 + \xi_ix_1 - \xi_i \eta_i \right)\left( \z \right) \left( \frac{\partial}{\partial x_0} \left(\xi_i x_0+x_1-\eta_i \right) \delta  + \left( \xi_i x_0+x_1-\eta_i\right) \right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2}\\
+
+\begin{align}
+H(phl) &= \begin{bmatrix}
+\frac{\partial phl }{\partial x_0 \partial  x_0} & \frac{\partial phl }{\partial x_0 \partial x_1}\\
+\frac{\partial phl }{\partial x_1 \partial  x_0} & \frac{\partial phl }{\partial x_1 \partial x_1}
+\end{bmatrix}\\
+&=\begin{bmatrix}
+\sum\limits_i^n \frac {\xi_i^2 \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \xi_i^2x_0 + \xi_ix_1 - \xi_i \eta_i \right)\left( \z \right) \left(\xi_i \delta  +  \xi_i x_0+x_1-\eta_i \right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2} & \sum\limits_i^n \frac {\xi_i  \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \xi_i^2x_0 + \xi_ix_1 - \xi_i \eta_i \right)\left( \z \right) \left( \delta  + \xi_i x_0+x_1-\eta_i \right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2}\\
+\sum\limits_i^n \frac {\xi_i \sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \z \right)^2 \left(\xi_i \delta  + \xi_i x_0+x_1-\eta_i\right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2} & \sum\limits_i^n \frac {\sqrt{ 1+ \left( \frac {\z} {\delta} \right)^2 } - \frac{\left( \z \right)^2\left(\delta  + \xi_i x_0+x_1-\eta_i \right)}{\delta \sqrt{ 1+ \left( \frac {\z} {\delta} \right) ^2}} \cdot } {1+ \left( \frac {\z} {\delta} \right)^2}
+\end{bmatrix}
+\end{align}
 
 
-%\begin{align}
-%	\frac{\partial}{\partial x_0} h_\delta(x,y) &= \frac{\partial}{\partial x_0} \sum\limits_i^n \left(1+ \frac {\thefunc}{\delta^2} \right)^\frac{1}{2}  - \delta^2 n\\
-%	&=  \sum\limits_i^n \frac{1}{2} \left( 1+ \frac {\thefunc}{\delta^2} \right)^{-\frac{1}{2}} \cdot \frac{\left( \dfunca   \cdot \delta^2 \right) - \left( \thefunc \cdot 0 \right)}{\delta^4} \\ 
-%\end{align}
+
 \end{document}
-
-
-

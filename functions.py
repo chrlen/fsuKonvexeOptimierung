@@ -92,11 +92,19 @@ def pseudoHuberLoss(x, delta, xi, eta):
 
 def pseudoHuberLossGradient(x, delta, xi, eta):
     pairs = zip(xi, eta)
-    dx0 = sum([(pair[0]**2 * x[0] + pair[0] * x[1] - pair[0] * pair[1]) / delta**2 *
+    dx0 = sum([((pair[0]**2 * x[0] + pair[0] * x[1] -pair[0]*pair[1])/(np.sqrt(1 * (pair[0] * x[0] + x[1] - pair[1])**2))) for pair in pairs])
+    
+    dx1 = sum([((pair[0] * x[0] +  x[1] - pair[1])/(np.sqrt(1 * (pair[0] * x[0] + x[1] - pair[1])**2))) for pair in pairs])
+
+
+
+    dx0 = sum([(pair[0]**2 * x[0] + pair[0] * x[1] - pair[0] * pair[1]) /
                np.sqrt(1 + ((pair[0] * x[0] + x[1] - pair[1]) / delta)**2) for pair in pairs])
     pairs = zip(xi, eta)
-    dx1 = sum([((pair[0] * x[0] + x[1] - pair[1]) / delta**2) * np.sqrt(1 +
-                                                                        ((pair[0] * x[0] + x[1] - pair[1]) / delta)**2) for pair in pairs])
+
+    dx1 = sum()
+
+    dx1 = sum([((pair[0] * x[0] + x[1] - pair[1]) / delta**2) * np.sqrt(1 +((pair[0] * x[0] + x[1] - pair[1]) / delta)**2) for pair in pairs])
     return(np.array([dx0, dx1]))
 
 
