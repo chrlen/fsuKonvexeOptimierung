@@ -2,27 +2,23 @@ import numpy as np
 import numpy.linalg as npl
 import matplotlib.pyplot as plt
 
-
 def evalQuadraticForm(x, Q, q, c):
     return 0.5 * x.dot(Q).dot(x) + q.dot(x) + c
 
-
 def evalFirstOrderGradientOfQuadraticForm(x, Q, q):
     return Q.dot(x) + q
-
 
 def evalField(f, X, Y):
     x_range = range(0, X.shape[0])
     y_range = range(0, X.shape[1])
     Z = np.zeros(X.shape)
-
+    print(Z)
     for x in x_range:
         for y in y_range:
             v = np.array([X[y, x], Y[y, x]])
             Z[y, x] = f(v)
 
     return Z
-
 
 def plotFunction(f,
                  xMin, xMax,
@@ -32,8 +28,9 @@ def plotFunction(f,
     x = np.arange(xMin, xMax, 0.1)
     y = np.arange(yMin, yMax, 0.1)
     X, Y = np.meshgrid(x, y)
+    print(X,Y)
     Z = evalField(f, X, Y)
-
+    print(Z)
     plt.figure()
     plt.contourf(X, Y, Z)
     for i in range(1, len(path)):
@@ -44,7 +41,6 @@ def plotFunction(f,
     plt.title(title)
     plt.show()
 
-
 def plotConvergence(f, path, title):
     opt = path[0]
     dist = list(map(lambda x: np.log(npl.norm(x - opt, ord=1) + 1), path))
@@ -53,25 +49,20 @@ def plotConvergence(f, path, title):
     plt.title(title)
     plt.show()
 
-
 def crit1(fx_thisTime, fx_nextTime, epsilon):
     return(fx_thisTime - fx_nextTime <= epsilon * max(1, abs(fx_thisTime)))
-
 
 def crit2(x_thisTime, x_nextTime, epsilon2):
     return(npl.norm(x_nextTime - x_thisTime) <= epsilon2 * max(1, npl.norm(x_thisTime)))
 
-
 def crit3(fx_thisTime, dfx_thisTime, epsilon3):
     return(npl.norm(dfx_thisTime) <= epsilon3 * max(1, np.abs(fx_thisTime)))
-
 
 def orCriterias(f, df, x_thisTime, x_nextTime, epsilon, epsilon2, epsilon3):
     fx_thisTime = f(x_thisTime)
     fx_nextTime = f(x_nextTime)
     dfx_thisTime = df(x_thisTime)
     return crit1(fx_thisTime, fx_nextTime, epsilon) or crit2(x_thisTime, x_nextTime, epsilon2) or crit3(fx_thisTime, dfx_thisTime, epsilon3)
-
 
 def armijoCrit(f, df, sigma, delta, x, d):
     return(f(x + sigma * d) <= f(x) + delta * sigma * df(x).T.dot(d))
@@ -86,7 +77,7 @@ def armijoStepwidth(
         delta=0.01,
         gamma=(1 / 10**4),
         sigma_0=1,
-        maxit=1000,
+        maxit=20,
         verbose=True):
 
     iterations = 0
@@ -173,7 +164,8 @@ def gradientDescentArmijoStepwidth(
         optimumNow = optimumNext
 
 
-def approximateGradient(x, f, epsilon=0.0000001):
+
+def approximateGradient(x, f, epsilon=0.01):
     n = x.shape[0]
     h = np.array([epsilon * max(1, abs(y)) for y in x])
     g = np.zeros(n)
@@ -183,10 +175,14 @@ def approximateGradient(x, f, epsilon=0.0000001):
         g[k] = (f(x + d) - f(x - d)) / 2 * h[k]
     return(g)
 
-
 def checkGradient(x, f, df, epsilon=0.0000001):
     return (npl.norm(df(x) - approximateGradient(x, f, epsilon)) / (npl.norm(df(x)) + 1)) > epsilon
 
+def checkGradient(x, f, df, epsilon=0.00000001):
+    app = approximateGradient(x, f, epsilon)
+    print(app,df(x))
+    return True
+    #return (npl.norm(df(x) - app) / (npl.norm(df(x)) + 1)) > epsilon
 
 def approximateHessian(x, f, epsilon):
     n = x.shape[0]
@@ -199,13 +195,12 @@ def approximateHessian(x, f, epsilon):
             d_two = np.zeros(n)
             d_two[l] = h[l]
             H[k, l] = (f(x + d_one + d_two) - f(x + d_one - d_two) +
-                       f(x - d_one - d_two) + f(x - d_one + d_two)) / 4 * h[k] * h[l]
+                       f(x - d_one - d_two) -  f(x - d_one + d_two)) / 4 * h[k] * h[l]
     return(H)
 
 
 def checkHessian(x, f, hf, epsilon=0.0001):
-    return npl.norm(hf - approximateHessian(x, f, epsilon)) * (npl.norm(hf) + 1) > epsilon
-
+    return npl.norm(hf(x) - approximateHessian(x, f, epsilon)) * (npl.norm(hf(x)) + 1) > epsilon
 
 def dampedNewton(
         f,
@@ -222,6 +217,7 @@ def dampedNewton(
         gamma=(1 / 10**4),
         sigma_0=1,
         maxit=1000,
+        maxitArmijo=30,
         verbose=True):
 
     optimumNow = startAt
@@ -237,13 +233,55 @@ def dampedNewton(
     iterations = 1
 
     while not finished:
-        # Check gradient in first iterations
-        if iterations < checkGradientNTimes:
-            if not checkGradient(optimumNow, f, df):
+            # Check gradient in first iterations
+            if iterations < checkGradientNTimes:
+                if not checkGradient(optimumNow, f, df):
+                    if verbose:
+                        print("Gradient-check failed in interation: " + str(iterations))
+                    return([])
+                if not checkHessian(optimumNow, f, hf):
+                    if verbose:
+                        print("Hessian-check failed in interation: " + str(iterations))
+                    return([])
+
+            hessian = hf(optimumNow)
+            if len(hessian.shape) == 1:
+                print("hessian:",hessian)
+                d = -1 * 1/(hessian) * optimumNow * df(optimumNow)
+            else:
+                id = np.eye(hessian.shape[0], hessian.shape[1])
+                # Condition problem
+                hessian += 0.0001 * hessian
+
+                inv = npl.solve(hessian, id)
+                d = -1 * inv.dot(df(optimumNow))
+            sigma_i = armijoStepwidth(
+                x=optimumNow,
+                f=f,
+                df=df,
+                d=d,
+                beta1=beta1,
+                beta2=beta2,
+                delta=delta,
+                gamma=gamma,
+                sigma_0=sigma_0,
+                maxit=maxitArmijo,
+                verbose=True
+            )
+
+            optimumNext = optimumNow + sigma_i * d
+            stepsTaken.insert(0, optimumNext)
+
+            if verbose:
+                print(str(optimumNow) + " | " + str(f(optimumNow)) + " | " + str(df(optimumNow)) + " | " + str(hf(optimumNow)) + " | " + str(sigma_i) + " | " + str(d))
+            if orCriterias(f, df, optimumNow, optimumNext, epsilon, epsilon2, epsilon3):
                 if verbose:
-                    print("Gradient-check failed in interation: " + str(iterations))
-                return([])
-            if not checkHessian(optimumNow, f, hf):
+                    print("Gradient descent with Armijo Stepwidth took: " +
+                          str(iterations) + " iterations.")
+                    print("Gradient descent with Armijo Stepwidth found: " +
+                          str(optimumNext) + ".")
+                return(stepsTaken)
+            if iterations > maxit:
                 if verbose:
                     print("Hessian-check failed in interation: " + str(iterations))
                 return([])

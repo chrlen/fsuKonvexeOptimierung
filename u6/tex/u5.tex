@@ -1,0 +1,83 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage[german]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{automata,positioning}
+\geometry{top=20mm, left=20mm, right=10mm, bottom=15mm}
+\allowdisplaybreaks
+
+\newcommand{\hr}{\begin{center} \line(1,0){450} \end{center}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{^\mathsf{T}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator{\co}{co}
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\Proj}{Pr}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\midd}{\mathrel{}\middle|\mathrel{}}
+
+
+\pagestyle{fancy}
+\lhead{Christian Lengert}
+\rhead{\today}
+\chead{153767}
+%\rfoot{Page \thepage}
+
+\begin{document}
+
+\begin{center}
+	\section*{Konvexe Optimierung}
+	\subsection*{5. Übungsserie}
+\end{center}
+
+\subsubsection*{Aufgabe 29}
+\paragraph{(1)}
+\begin{equation}
+f_1(x) = \sum\limits_{i=1}^n x_i = \norm{x}^2
+\end{equation}
+Zu zeigen: $f_1$ ist gleichmäßig konvex mit Konvexitätsparameter $2$. $f_1$ ist gleichmäßig konvex wenn gilt:
+\begin{equation}
+(1-t)\norm{x}^2 + t \norm{x}^2 \geq \norm{(1-t)x + ty}^2 + t(1-t)\mu \norm{x -y}^2
+\end{equation}
+
+\paragraph{(2)}
+
+\begin{equation}
+f_2(x) = x^4
+\end{equation}
+
+
+\begin{align*}
+	(1-t)x^4 + ty^4 &\leq \left((1-t)x + ty\right)^4\\
+	&\leq \left( (1-t)x \right)^4 + 4*\left( (1-t)x \right)^3*ty + 6*\left( (1-t)x \right)^2*ty^2 + 4*\left( (1-t)x \right)*ty^3 + ty^4
+\end{align*}
+
+\begin{align}
+(1-t)x^4 + ty^4 &\leq \left((1-t)x + ty\right)^4\\
+(1-t)x^4 + \textcolor{blue}{ty^4} &\leq \textcolor{blue}{ty^4}+4ty^3x-4t^2y^3x+6ty^2x^2-12t^2y^2x^2+6t^3y^2x^2+4tyx^3\textcolor{blue}{-12t^2yx^3+12t^2tyx^3}\dots \\
+&\dots -4t^4yx^3+x^4-4tx^4+6t^2x^4-4t^3x^4+t^4x^4\\
+(1-t)x^4 &\leq 4ty^3x-4t^2y^3x+6ty^2x^2-12t^2y^2x^2+6t^3y^2x^2+4tyx^3\dots \\
+&\dots-4t^4yx^3+x^4-4tx^4+6t^2x^4-4t^3x^4+t^4x^4\\
+\end{align}
+
+\begin{align*}
+	(1-t)x^4 + ty^4 &\leq \left((1-t)x + ty\right)^4\\
+	&\leq ty^4 + 4 ty^3 x - 4t^2y^3 x + 6 ty^2 x^2 -12 t^2y^2 x^2 + 6 t^2 ty^2 x^2 + 4 ty x^3 \dots\\
+	&\dots- 12 t^2y x^3 + 12 t^2 ty x^3 - 4 t^3 ty x^3 + x^4 - 4 t x^4 + 6 t^2 x^4 - 4 t^3 x^4 + t^4 x^4\\
+	&\leq ty^4 + 4 ty^3 x - 4t^2y^3 x + 6 ty^2 x^2 -12 t^2y^2 x^2 + 6 t^2 ty^2 x^2 + 4 ty x^3 \dots\\
+	&\dots - 4 t^y x^3 + x^4 - 4 t x^4 + 6 t^2 x^4 - 4 t^3 x^4 + t^4 x^4\\
+\end{align*}
+
+\end{document}
+
+
+4*t*y^3*x-4*t^2*y^3*x+6*t*y^2*x^2-12*t^2*y^2*x^2+6*t^3*y^2*x^2+4*t*y*x^3-4*t^4*y*x^3+x^4-4*t*x^4+6*t^2*x^4-4*t^3*x^4+t^4*x^4
