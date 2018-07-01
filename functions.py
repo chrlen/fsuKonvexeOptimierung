@@ -128,8 +128,12 @@ def squarerootExampleHessian(x):
 #L2 SVM
 #Logistic SVM
 
-def lsvm(x,y,w,b,c=10):
-    pairs = zip(x,y)
+def lsvm(X,Y,w,b,c=10):
+    pairs = zip(X,Y)
     res = 0.5 * w.T.dot(w) + c * sum([np.log(1+ np.exp(-pair[1] * (w.dot(pair[0]) + b))) for pair in pairs])
     return(res)
+
+def dlsvm(X,Y,w,b,c=10):
+    pairs = zip(X,Y)
+    res =
 

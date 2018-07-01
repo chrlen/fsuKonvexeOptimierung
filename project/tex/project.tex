@@ -1,0 +1,112 @@
+\documentclass[12pt,landscape]{article}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage[german]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage[a3paper]{geometry}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{automata,positioning}
+\geometry{top=20mm, left=20mm, right=10mm, bottom=15mm}
+
+
+\newcommand{\hr}{\begin{center} \line(1,0){450} \end{center}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{^\mathsf{T}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator{\co}{co}
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\Proj}{Pr}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\midd}{\mathrel{}\middle|\mathrel{}}
+
+
+
+\pagestyle{fancy}
+\lhead{Christian Lengert}
+\rhead{\today}
+\chead{153767}
+%\rfoot{Page \thepage}
+
+\begin{document}
+
+\begin{center}
+	\section*{Konvexe Optimierung}
+	\subsection*{Projekt}
+\end{center}
+\hr
+\subsubsection*{$L_1$ Loss}
+\begin{equation}
+\min\limits_{x \in \mathbb{R}^n} f_1(x) = \frac{1}{2} w\tr w +c \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,1-y_i \cdot \left( w\tr x_i + b \right) \right\}\right]
+\end{equation}
+\hr
+\subsubsection*{$L_2$ Loss}
+\begin{equation}
+\min\limits_{x \in \mathbb{R}^n} f_2(x) = \frac{1}{2} w\tr w +c \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,1-y_i \cdot \left( w\tr x_i + b \right) \right\}^2\right]
+\end{equation}
+\hr
+\subsubsection*{Logistic Loss}
+\newcommand{\zLog}{1+\exp(-y_i (w\tr x_i + b))}
+
+
+\begin{equation}
+\min\limits_{x \in \mathbb{R}^n} f_3(x) = \frac{1}{2} w\tr w +c \cdot \sum\limits_{i=1}^k \left[ \ln(\zLog)\right]\\
+\end{equation}
+
+\begin{align*}
+\frac{\partial}{\partial w} f_3(x) &= \frac{\partial}{\partial w} \left[ \frac{1}{2} w\tr w \right] +c \cdot \sum\limits_{i=1}^k \frac{\partial}{\partial w} \left[ \ln(\zLog)\right]\\
+&= w +c \cdot \sum\limits_{i=1}^k \frac{\partial}{\partial w} \left[ \ln(\zLog)\right]\\
+\end{align*}
+
+\begin{align*}
+\frac{\partial}{\partial x} f_3(x) &= \frac{\partial}{\partial x} \frac{1}{2} w\tr w +c \cdot \sum\limits_{i=1}^k \frac{\partial}{\partial x} \left[ \ln(\zLog)\right]\\
+&= c \cdot \sum\limits_{i=1}^k \frac{\partial}{\partial x} \left[ \ln(1+\exp(-y_i\left(w\tr x_i + b \right) ))\right] \\
+&= c \cdot \sum\limits_{i=1}^k \frac{\frac{\partial}{\partial x} \left[ 1+\exp(-y_i(w\tr x_i + b)) \right]} {\zLog} \\
+&= c \cdot \sum\limits_{i=1}^k \frac{\frac{\partial}{\partial x} \left[ \exp(-y_i(w\tr x_i + b))\right]}{\zLog} \\
+&= c \cdot \sum\limits_{i=1}^k \frac{ \exp(-y_i(w\tr x_i + b)) \frac{\partial}{\partial x} \left[ -y_i (w\tr x_i + b)  \right]}{\zLog}\\
+&= c \cdot \sum\limits_{i=1}^k \frac{ \exp(-y_i(w\tr x_i + b)) \frac{\partial}{\partial x} \left[ -y_i w\tr x_i -y_i b \right]}{\zLog}\\
+&= c \cdot \sum\limits_{i=1}^k \frac{ -y_i w\exp(-y_i(w\tr x_i + b)) }{\zLog}\\
+%&= c \cdot \sum\limits_{i=1}^k \frac{ -y_i w\exp(-y_i(w^{(1)} x^{(1)}_i + w^{(2)} x^{(2)}_i + b)) }{\zLog}\\
+\end{align*}
+
+\newcommand{\dLogz}{-y_i w \exp(-y_i(w\tr x_i + b))}
+\newcommand{\dLogn}{\zLog}
+
+
+\begin{align*}
+\frac{\partial}{\partial x \partial x} f_3(x) &= \frac{\partial}{\partial x}\left[ c \cdot \sum\limits_{i=1}^k \frac{\dLogz}{\dLogn}  \right] \\
+&= c \cdot \sum\limits_{i=1}^k \frac{\partial}{\partial x} \left[  \frac{\dLogz}{\dLogn}  \right] = c \cdot \sum\limits_{i=1}^k \frac{ \frac{\partial}{\partial x} u(x_i) \cdot v(x_i) - u(x_i) \cdot \frac{\partial}{\partial x_i} v(x_i)} {v(x_i)^2}\\
+\end{align*}
+
+\begin{align*}
+u(x) &= \dLogz\\
+v(x) &= \dLogn\\
+\frac{\partial}{\partial x} u(x) &= \frac{\partial}{\partial x} \left[\dLogz \right]\\
+ &= -y_i w \exp(-y_i(w\tr x_i + b)) \frac{\partial}{\partial x} \left[ -y_i(w\tr x_i + b) \right] \\
+&= y_i^2 w^2 \exp(-y_i(w\tr x_i + b)) \\  
+\frac{\partial}{\partial x}  v(x) &= \frac{\partial}{\partial x} \left[  \dLogn \right] \\ 
+&= \frac{\partial}{\partial x} \left[\exp(-y_i\left(w\tr x_i + b \right)) \right] \\ 
+&= u(x)
+\end{align*}
+
+\begin{align*}
+\frac{\partial}{\partial x \partial x} f_3(x) &= \frac{ y_i^2 w^2 \exp(-y_i(w\tr x_i + b)) \cdot \left(\dLogn\right) - \left( \dLogz \right)^2 } {\left(\dLogn\right)^2}\\
+\end{align*}
+
+
+
+%&\text{with } u(x) = \dLogz \text{ and } v(x) = \dLogn \\
+%u
+
+
+
+
+
+%&= c \cdot \sum\limits_{i=1}^k \frac{\frac{\partial}{\partial x} \left[ \dLogz \right] \cdot \dLogn - \dLogz \cdot \frac{\partial}{\partial x} \left[ \dLogn \right] } {\dLogn^2}
+%\end{align*}
+\end{document}
