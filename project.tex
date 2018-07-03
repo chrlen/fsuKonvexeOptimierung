@@ -44,21 +44,6 @@
 \begin{equation}
 \min\limits_{x \in \mathbb{R}^n} f_1(x) = \frac{1}{2} w\tr w +c \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,1-y_i \cdot \left( w\tr x_i + b \right) \right\}\right]
 \end{equation}
-
-\begin{align}
-\frac{\partial}{\partial w} f_1(x) &= w + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w} \left[ 1-y_i \cdot \left( w\tr x_i + b \right) \right]\\
-&= w + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w} \left[ -y_i \cdot \left( w\tr x_i + b \right) \right]\\
-&= w + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w} \left[ -y_iw\tr x_i + -y_ib \right]\\
-&= w + c \cdot \sum\limits_{i=1}^k  -y_i x_i \\
-\end{align}
-
-\begin{align}
-\frac{\partial}{\partial b} f_1(x) &= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ 1-y_i \cdot \left( w\tr x_i + b \right) \right]\\
-&= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ -y_i w\tr x_i + -y_ib \right]\\
-&= c \cdot \sum\limits_{i=1}^k  -y_i\\
-\end{align}
-
-
 \hr
 \subsubsection*{$L_2$ Loss}
 \begin{equation}
@@ -67,6 +52,7 @@
 \hr
 \subsubsection*{Logistic Loss}
 \newcommand{\zLog}{1+\exp(-y_i (w\tr x_i + b))}
+
 
 \begin{equation}
 \min\limits_{x \in \mathbb{R}^n} f_3(x) = \frac{1}{2} w\tr w +c \cdot \sum\limits_{i=1}^k \left[ \ln(\zLog)\right]\\
@@ -96,10 +82,6 @@
 \frac{\partial}{\partial x \partial x} f_3(x) &= \frac{\partial}{\partial x}\left[ c \cdot \sum\limits_{i=1}^k \frac{\dLogz}{\dLogn}  \right] \\
 &= c \cdot \sum\limits_{i=1}^k \frac{\partial}{\partial x} \left[  \frac{\dLogz}{\dLogn}  \right] = c \cdot \sum\limits_{i=1}^k \frac{ \frac{\partial}{\partial x} u(x_i) \cdot v(x_i) - u(x_i) \cdot \frac{\partial}{\partial x_i} v(x_i)} {v(x_i)^2}\\
 \end{align*}
-
-
-
-
 
 \begin{align*}
 u(x) &= \dLogz\\
