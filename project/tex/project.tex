@@ -3,7 +3,8 @@
 \usepackage[german]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
-\usepackage[a3paper]{geometry}
+%\usepackage[a3paper]{geometry}
+\usepackage{geometry}
 \usepackage{tikz}
 \usepackage{xcolor}
 \usetikzlibrary{automata,positioning}
@@ -65,74 +66,78 @@
 \end{equation}
 
 \begin{align}
-\frac{\partial}{\partial w_1} f_1(x) &= \frac{\partial}{\partial w_1}\frac{1}{2} \left[ w_1^2 + w_2^2 \right] + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[ 1-y_i \cdot \left( w_1  x_1^{(i)} +  w_2  x_2^{(i)} + b \right) \right]\\
-&= \frac{1}{2} 2w_1 + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[ -y_i w_1  x_1^{(i)} -y_i  w_2  x_2^{(i)}  -y_ib \right]\\
-&= w_1 - c \cdot \sum\limits_{i=1}^k y_i  x_1^{(i)}\\
+\frac{\partial}{\partial w_1} f_1(x) &= \frac{\partial}{\partial w_1}\frac{1}{2} \left[ w_1^2 + w_2^2 \right] + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[ 1-y_i \cdot \left( w_1  x_1^{(i)} +  w_2  x_2^{(i)} + b \right) \right]\nonumber\\
+&= \frac{1}{2} 2w_1 + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[ -y_i w_1  x_1^{(i)} -y_i  w_2  x_2^{(i)}  -y_ib \right]\nonumber\\
+&= w_1 - c \cdot \sum\limits_{i=1}^k y_i  x_1^{(i)}
 \end{align}
+
 \newcommand{\lOneLossDwOne}{w_1 - c \cdot \sum\limits_{i=1}^k y_i  x_1^{(i)}}
 
 \begin{align}
-\frac{\partial}{\partial w_2} f_1(x) &= w_2  - c \cdot \sum\limits_{i=1}^k y_i  x_2^{(i)} \\
+\frac{\partial}{\partial w_2} f_1(x) &= w_2  - c \cdot \sum\limits_{i=1}^k y_i  x_2^{(i)} 
 \end{align}
 
 \newcommand{\lOneLossDwTwo}{w_2  - c \cdot \sum\limits_{i=1}^k y_i  x_2^{(i)} }
 
 \begin{align}
-\frac{\partial}{\partial b} f_1(x) &= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ 1-y_i \cdot \left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b \right) \right]\\
-&= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ -y_i w_1  x_1^{(i)} +  w_2  x_2^{(i)} -y_ib \right]\\
-&= - c \cdot \sum\limits_{i=1}^k y_i\\
+\frac{\partial}{\partial b} f_1(x) &= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ 1-y_i \cdot \left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b \right) \right]\nonumber\\
+&= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ -y_i w_1  x_1^{(i)} +  w_2  x_2^{(i)} -y_ib \right]\nonumber\\
+&= - c \cdot \sum\limits_{i=1}^k y_i
 \end{align}
 
 
 \begin{equation}
 \mathcal{H}(f_1) = \begin{bmatrix}
-\frac{\partial^2}{\partial w_1 \partial w_1} & \frac{\partial^2}{\partial w_1 \partial w_2} & \frac{\partial^2}{\partial w_1 \partial b}\\
-\frac{\partial^2}{\partial w_2 \partial w_1} & \frac{\partial^2}{\partial w_2 \partial w_2} & \frac{\partial^2}{\partial w_2 \partial b}\\
-\frac{\partial^2}{\partial b \partial w_1} & \frac{\partial^2}{\partial b \partial w_2} & \frac{\partial^2}{\partial b \partial b}\\
+\frac{\partial^2}{\partial w_1 \partial w_1} f_1(x) & \frac{\partial^2}{\partial w_1 \partial w_2} f_1(x) & \frac{\partial^2}{\partial w_1 \partial b} f_1(x)\\
+\frac{\partial^2}{\partial w_2 \partial w_1} f_1(x) & \frac{\partial^2}{\partial w_2 \partial w_2} f_1(x) & \frac{\partial^2}{\partial w_2 \partial b}f_1(x)\\
+\frac{\partial^2}{\partial b \partial w_1}f_1(x) & \frac{\partial^2}{\partial b \partial w_2} f_1(x) & \frac{\partial^2}{\partial b \partial b}f_1(x)
 \end{bmatrix}
 \end{equation}
 
 
 
 \begin{align}
-\frac{\partial^2}{\partial w_1 \partial w_1} &=  \frac{\partial}{\partial w_1} \left[  \lOneLossDwOne \right]  = \frac{\partial}{\partial w_1} \left[ w_1 \right] = 1
+\frac{\partial^2}{\partial w_1 \partial w_1} f_1(x) &=  \frac{\partial}{\partial w_1} \left[  \lOneLossDwOne \right]  = \frac{\partial}{\partial w_1} \left[ w_1 \right] = 1
 \end{align}
 
 \begin{align}
-\frac{\partial^2}{\partial w_1 \partial w_2} &=  \frac{\partial}{\partial w_2} \left[  \lOneLossDwOne \right] =  0
+\frac{\partial^2}{\partial w_1 \partial w_2} f_1(x) &=  \frac{\partial}{\partial w_2} \left[  \lOneLossDwOne \right] =  0 \nonumber
 \end{align}
 
 \begin{align}
-\frac{\partial^2}{\partial w_1 \partial b} &=  \frac{\partial}{\partial b} \left[  \lOneLossDwOne \right] = 0
+\frac{\partial^2}{\partial w_1 \partial b} f_1(x) &=  \frac{\partial}{\partial b} \left[  \lOneLossDwOne \right] = 0\nonumber
 \end{align}
 
 \begin{align}
-\frac{\partial^2}{\partial w_2 \partial w_1} &=  \frac{\partial}{\partial w_1} \left[ \lOneLossDwTwo \right] = 0
+\frac{\partial^2}{\partial w_2 \partial w_1} f_1(x) &=  \frac{\partial}{\partial w_1} \left[ \lOneLossDwTwo \right] = 0\nonumber
 \end{align}
 
 \begin{align}
-\frac{\partial^2}{\partial w_2 \partial w_2} &= \frac{\partial}{\partial w_2} \left[ \lOneLossDwTwo \right] = \frac{\partial}{\partial w_2} \left[ w_2 \right] = 1
+\frac{\partial^2}{\partial w_2 \partial w_2} f_1(x) &= \frac{\partial}{\partial w_2} \left[ \lOneLossDwTwo \right] = \frac{\partial}{\partial w_2} \left[ w_2 \right] = 1
 \end{align}
 
 \begin{align}
-\frac{\partial^2}{\partial w_2 \partial w_1 b} &= \frac{\partial}{\partial b} \left[ \lOneLossDwTwo \right] = 0
+\frac{\partial^2}{\partial w_2 \partial w_1 b} f_1(x) &= \frac{\partial}{\partial b} \left[ \lOneLossDwTwo \right] = 0\nonumber
 \end{align}
 
 \begin{align}
-\frac{\partial^2}{\partial b \partial w_1} &= \frac{\partial}{\partial w_1} \left[  - c \cdot \sum\limits_{i=1}^k y_i \right] = 0
+\frac{\partial^2}{\partial b \partial w_1} f_1(x) &= \frac{\partial}{\partial w_1} \left[  - c \cdot \sum\limits_{i=1}^k y_i \right] = 0\nonumber
 \end{align}
 
 \begin{align}
-\frac{\partial^2}{\partial b \partial w_2}  &= \frac{\partial}{\partial w_2} \left[  - c \cdot \sum\limits_{i=1}^k y_i \right] = 0
+\frac{\partial^2}{\partial b \partial w_2}  f_1(x) &= \frac{\partial}{\partial w_2} \left[  - c \cdot \sum\limits_{i=1}^k y_i \right] = 0 \nonumber
 \end{align}
 
 \begin{align}
-\frac{\partial^2}{\partial b \partial b} &= \frac{\partial}{\partial b} \left[  - c \cdot \sum\limits_{i=1}^k y_i \right] = 0
+\frac{\partial^2}{\partial b \partial b} f_1(x) &= \frac{\partial}{\partial b} \left[  - c \cdot \sum\limits_{i=1}^k y_i \right] = 0 \nonumber
 \end{align}
+
+
+
 
 
 \begin{equation}
-\Rightarrow \mathcal{H}(f_1) = \begin{bmatrix}
+\Rightarrow \mathcal{H}(f_2) = \begin{bmatrix}
 1 & 0 & 0\\
 0 & 1 & 0\\
 0&0&0\\
@@ -140,47 +145,140 @@
 \end{equation}
 
 
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 \hr
 \subsubsection*{$L_2$ Loss}
 \newcommand{\lTwoLoss}{1-y_i \cdot \left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b\right)}
 \begin{equation}
-\min\limits_{x \in \mathbb{R}^n} f_2(x) = \frac{1}{2} w_1^2 + w_2^2 +c \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,\lTwoLoss  \right\}^2\right]
+\min\limits_{x \in \mathbb{R}^n} f_2(x) = \frac{1}{2} \left( w_1^2 + w_2^2 \right) +c    \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,\lTwoLoss  \right\}^2\right]
 \end{equation}
 
+\newcommand{\multA}{w_1  x_1^{(i)}}
+\newcommand{\multAsq}{w_1^2  x_1^{(i)}}
+\newcommand{\multB}{w_2  x_2^{(i)}}
 
 \begin{align}
-\frac{\partial}{\partial w_1} f_1(x) &= \frac{1}{2} \frac{\partial}{\partial w_1} \left[  w_1^2 + w_2^2 \right]  +c \cdot \sum\limits_{i=1}^k  \left[ \left( \lTwoLoss \right)^2 \right]\\
-&= \frac{1}{2} \frac{\partial}{\partial w_1} \left[  w_1^2 + w_2^2 \right]  +c \cdot \sum\limits_{i=1}^k  \left[ \left( \lTwoLoss \right)^2 \right]
+\frac{\partial}{\partial w_1} f_2(x) 
+&= \frac{1}{2}   \frac{\partial}{\partial w_1} \left[  w_1^2 + w_2^2 \right] +c \cdot \sum\limits_{i=1}^k \frac{\partial}{\partial w_1}  \left[ \left( \lTwoLoss \right)^2 \right]\nonumber\\
+&= w_1 +c \cdot \sum\limits_{i=1}^k  2\left( \lTwoLoss \right) \frac{\partial}{\partial w_1}  \left[ \lTwoLoss \right]\nonumber\\
+&= w_1 +c \cdot \sum\limits_{i=1}^k  2\left( \lTwoLoss \right) \frac{\partial}{\partial w_1}  \left[ -y_i w_1  x_1^{(i)} -y_i w_2  x_2^{(i)} -y_i b \right]\nonumber\\
+&= w_1 -c \cdot \sum\limits_{i=1}^k  2y_i  x_1^{(i)} \left( \lTwoLoss \right) \\ \nonumber
+%&= w_1 +c \cdot \sum\limits_{i=1}^k   -2y_i  x_2^{(i)}  + 2y_i^2  x_2^{(i)} \cdot \left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b \right)\\
 \end{align}
+
+\newcommand{\lTwoLossDwOne}{w_1 -c \cdot \sum\limits_{i=1}^k  2y_i  x_1^{(i)} \left( \lTwoLoss \right)}
+
 
 \begin{align}
-\frac{\partial}{\partial w_2} f_1(x) &= w_1^2 + 2w_2  - c \cdot \sum\limits_{i=1}^k y_i  x_2^{(i)} \\
+\frac{\partial}{\partial w_2} f_2(x)
+&= w_2 +c \cdot \sum\limits_{i=1}^k  2\left( \lTwoLoss \right) \frac{\partial}{\partial w_2}  \left[ -y_i w_1  x_1^{(i)} -y_i w_2  x_2^{(i)} -y_i b \right]\nonumber\\ 
+&= w_2 -c \cdot \sum\limits_{i=1}^k  2y_i  x_2^{(i)} \left( \lTwoLoss \right) \\ 
 \end{align}
 
+\newcommand{\lTwoLossDwTwo}{w_2 -c \cdot \sum\limits_{i=1}^k  2y_i  x_2^{(i)} \left( \lTwoLoss \right)}
 
 
 \begin{align}
-\frac{\partial}{\partial b} f_1(x) &= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ 1-y_i \cdot \left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b \right) \right]\\
-&= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ -y_i w_1  x_1^{(i)} +  w_2  x_2^{(i)} -y_ib \right]\\
-&= - c \cdot \sum\limits_{i=1}^k y_i\\
+\frac{\partial}{\partial b} f_2(x) &= - c \cdot \sum\limits_{i=1}^k 2 y_i  \left( \lTwoLoss \right)\\
 \end{align}
 
+\newcommand{\lTwoLossDwb}{- c \cdot \sum\limits_{i=1}^k 2 y_i  \left( \lTwoLoss \right)}
 
 \begin{equation}
-\mathcal{H}(f_1) = \begin{bmatrix}
-\frac{\partial^2}{\partial w_1 \partial w_1} & \frac{\partial^2}{\partial w_1 \partial w_2} & \frac{\partial^2}{\partial w_1 \partial b}\\
-\frac{\partial^2}{\partial w_2 \partial w_1} & \frac{\partial^2}{\partial w_2 \partial w_2} & \frac{\partial^2}{\partial w_2 \partial b}\\
-\frac{\partial^2}{\partial b \partial w_1} & \frac{\partial^2}{\partial b \partial w_2} & \frac{\partial^2}{\partial b \partial b}\\
+\mathcal{H}(f_2) = \begin{bmatrix}
+\frac{\partial^2}{\partial w_1 \partial w_1} f_2(x) & \frac{\partial^2}{\partial w_1 \partial w_2} f_2(x) & \frac{\partial^2}{\partial w_1 \partial b} f_2(x)\\
+\frac{\partial^2}{\partial w_2 \partial w_1} f_2(x) & \frac{\partial^2}{\partial w_2 \partial w_2} f_2(x) & \frac{\partial^2}{\partial w_2 \partial b}f_2(x)\\
+\frac{\partial^2}{\partial b \partial w_1}f_2(x) & \frac{\partial^2}{\partial b \partial w_2} f_2(x) & \frac{\partial^2}{\partial b \partial b}f_2(x)
+\end{bmatrix}
+\end{equation}
+
+\begin{align}
+\frac{\partial^2}{\partial w_1 \partial w_1} f_2(x) 
+&=  \frac{\partial}{\partial w_1} \left[  \lTwoLossDwOne \right]\\   \nonumber
+&= 1 -   c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[ 2y_i  x_1^{(i)} \left( \lTwoLoss \right) \right]\\ \nonumber
+&= 1 -   c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[  \left( 2y_i  x_1^{(i)} - 2y_i  x_1^{(i)}y_i\left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b\right) \right) \right]\\ \nonumber
+&= 1 -   c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[  - 2y_i  x_1^{(i)}y_i w_1  x_1^{(i)}  \right]\\ \nonumber
+&= 1 +   c \cdot \sum\limits_{i=1}^k 2y_i  x_1^{(i)}y_i  x_1^{(i)}
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial w_1 \partial w_2} f_2(x) 
+&= -   c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_2} \left[  - 2y_i  x_1^{(i)}y_i w_2  x_2^{(i)}  \right]\\ \nonumber
+&= c \cdot \sum\limits_{i=1}^k 2y_i  x_1^{(i)}y_i  x_2^{(i)} \nonumber
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial w_1 \partial b} f_2(x) 
+&= -   c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[  \left( 2y_i  x_1^{(i)} - 2y_i  x_1^{(i)}y_i\left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b\right) \right) \right]\\ \nonumber
+&=    c \cdot \sum\limits_{i=1}^k 2y_i  x_1^{(i)}y_i \\ 
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial w_2 \partial w_1} f_2(x) &=  \frac{\partial}{\partial w_1} \left[ \lTwoLossDwTwo \right]\\ \nonumber
+&= -c \cdot \sum\limits_{i=1}^k \frac{\partial}{\partial w_1} \left[  2y_i  x_2^{(i)} \left( \lTwoLoss \right) \right]\\ \nonumber
+&= -c \cdot \sum\limits_{i=1}^k \frac{\partial}{\partial w_1} \left[   2y_i  x_2^{(i)}  - 2y_i  x_2^{(i)}y_i w_1  x_1^{(i)}  - 2y_i  x_2^{(i)}y_i w_2  x_2^{(i)} - 2y_i  x_2^{(i)}y_i b \right]\\ \nonumber
+&= c \cdot \sum\limits_{i=1}^k 2y_i  x_2^{(i)}y_i  x_1^{(i)}   \\
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial w_2 \partial w_2} f_2(x) &= 1 +  c \cdot \sum\limits_{i=1}^k 2y_i  x_2^{(i)}y_i x_2^{(i)} 
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial w_2 \partial b} f_2(x) &= c \cdot \sum\limits_{i=1}^k  2y_i  x_2^{(i)}y_i
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial b \partial w_1} f_2(x) 
+&= \frac{\partial}{\partial w_1} \left[ \lTwoLossDwb \right]\nonumber\\
+&= - c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[    2 y_i- 2 y_i y_i  w_1  x_1^{(i)}  - 2 y_i y_i w_2  x_2^{(i)}  - 2 y_i y_i b \right] \\\nonumber
+&=  c \cdot \sum\limits_{i=1}^k 2 y_i y_i  x_1^{(i)}   \nonumber
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial b \partial w_2}  f_2(x) 
+&= \frac{\partial}{\partial w_2} \left[ \lTwoLossDwb \right]\nonumber\\
+&= - c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_2} \left[    2 y_i- 2 y_i y_i  w_1  x_1^{(i)}  - 2 y_i y_i w_2  x_2^{(i)}  - 2 y_i y_i b \right] \\\nonumber
+&=  c \cdot \sum\limits_{i=1}^k 2 y_i y_i  x_2^{(i)}   \nonumber
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial b \partial b} f_2(x)
+&= \frac{\partial}{\partial w_2} \left[ \lTwoLossDwb \right]\nonumber\\
+&= - c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_2} \left[    2 y_i- 2 y_i y_i  w_1  x_1^{(i)}  - 2 y_i y_i w_2  x_2^{(i)}  - 2 y_i y_i b \right] \\\nonumber
+&=  c \cdot \sum\limits_{i=1}^k 2 y_i y_i \nonumber
+\end{align}
+
+\newcommand{\lTwoDOneDOne}{1 +   c \cdot \sum\limits_{i=1}^k 2y_i  x_1^{(i)}y_i  x_1^{(i)}}
+\newcommand{\lTwoDOneDTwo}{c \cdot \sum\limits_{i=1}^k 2y_i  x_1^{(i)}y_i  x_2^{(i)}}
+\newcommand{\lTwoDOneDb}{c \cdot \sum\limits_{i=1}^k 2y_i  x_1^{(i)}y_i}
+\newcommand{\lTwoDTwoDOne}{c \cdot \sum\limits_{i=1}^k 2y_i  x_2^{(i)}y_i  x_1^{(i)} }
+\newcommand{\lTwoDTwoDTwo}{1 +  c \cdot \sum\limits_{i=1}^k 2y_i  x_2^{(i)}y_i x_2^{(i)}}
+\newcommand{\lTwoDTwoDb}{c \cdot \sum\limits_{i=1}^k  2y_i  x_2^{(i)}y_i}
+\newcommand{\lTwoDbDOne}{c \cdot \sum\limits_{i=1}^k 2 y_i y_i  x_1^{(i)}}
+\newcommand{\lTwoDbDTwo}{c \cdot \sum\limits_{i=1}^k 2 y_i y_i  x_2^{(i)}}
+\newcommand{\lTwoDbDb}{c \cdot \sum\limits_{i=1}^k 2 y_i y_i}
+
+\begin{equation}
+\Rightarrow \mathcal{H}(f_2) = \begin{bmatrix}
+\lTwoDOneDOne & \lTwoDOneDTwo & \lTwoDOneDb\\
+\lTwoDTwoDOne & \lTwoDTwoDTwo & \lTwoDTwoDb\\
+\lTwoDbDOne & \lTwoDbDTwo & \lTwoDbDb\\
 \end{bmatrix}
 \end{equation}
 
 
 
-
-
-
-
 \hr
+%----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 \subsubsection*{Logistic Loss}
 \newcommand{\zLog}{1+\exp(-y_i (w\tr x_i + b))}
 
