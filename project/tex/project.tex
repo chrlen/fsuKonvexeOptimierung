@@ -40,30 +40,146 @@
 	\subsection*{Projekt}
 \end{center}
 \hr
+%\subsubsection*{$L_1$ Loss}
+%\begin{equation}
+%\min\limits_{x \in \mathbb{R}^n} f_1(x) = \frac{1}{2} w\tr w +c \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,1-y_i \cdot \left( w\tr x_i + b \right) \right\}\right]
+%\end{equation}
+%
+%\begin{align}
+%\frac{\partial}{\partial w} f_1(x) &= w + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w} \left[ 1-y_i \cdot \left( w\tr x_i + b \right) \right]\\
+%&= w + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w} \left[ -y_i \cdot \left( w\tr x_i + b \right) \right]\\
+%&= w + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w} \left[ -y_iw\tr x_i + -y_ib \right]\\
+%&= w + c \cdot \sum\limits_{i=1}^k  -y_i x_i \\
+%\end{align}
+%
+%\begin{align}
+%\frac{\partial}{\partial b} f_1(x) &= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ 1-y_i \cdot \left( w\tr x_i + b \right) \right]\\
+%&= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ -y_i w\tr x_i + -y_ib \right]\\
+%&= c \cdot \sum\limits_{i=1}^k  -y_i\\
+%\end{align}
+%
+%\hr
 \subsubsection*{$L_1$ Loss}
 \begin{equation}
-\min\limits_{x \in \mathbb{R}^n} f_1(x) = \frac{1}{2} w\tr w +c \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,1-y_i \cdot \left( w\tr x_i + b \right) \right\}\right]
+\min\limits_{x \in \mathbb{R}^n} f_1(x) = \frac{1}{2} \left(  w_1^2 + w_2^2 \right) +c \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,1-y_i \cdot \left( w_1  x_1^{(i)} +  w_2  x_2^{(i)} + b \right) \right\}\right]
 \end{equation}
 
 \begin{align}
-\frac{\partial}{\partial w} f_1(x) &= w + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w} \left[ 1-y_i \cdot \left( w\tr x_i + b \right) \right]\\
-&= w + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w} \left[ -y_i \cdot \left( w\tr x_i + b \right) \right]\\
-&= w + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w} \left[ -y_iw\tr x_i + -y_ib \right]\\
-&= w + c \cdot \sum\limits_{i=1}^k  -y_i x_i \\
+\frac{\partial}{\partial w_1} f_1(x) &= \frac{\partial}{\partial w_1}\frac{1}{2} \left[ w_1^2 + w_2^2 \right] + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[ 1-y_i \cdot \left( w_1  x_1^{(i)} +  w_2  x_2^{(i)} + b \right) \right]\\
+&= \frac{1}{2} 2w_1 + c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial w_1} \left[ -y_i w_1  x_1^{(i)} -y_i  w_2  x_2^{(i)}  -y_ib \right]\\
+&= w_1 - c \cdot \sum\limits_{i=1}^k y_i  x_1^{(i)}\\
+\end{align}
+\newcommand{\lOneLossDwOne}{w_1 - c \cdot \sum\limits_{i=1}^k y_i  x_1^{(i)}}
+
+\begin{align}
+\frac{\partial}{\partial w_2} f_1(x) &= w_2  - c \cdot \sum\limits_{i=1}^k y_i  x_2^{(i)} \\
+\end{align}
+
+\newcommand{\lOneLossDwTwo}{w_2  - c \cdot \sum\limits_{i=1}^k y_i  x_2^{(i)} }
+
+\begin{align}
+\frac{\partial}{\partial b} f_1(x) &= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ 1-y_i \cdot \left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b \right) \right]\\
+&= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ -y_i w_1  x_1^{(i)} +  w_2  x_2^{(i)} -y_ib \right]\\
+&= - c \cdot \sum\limits_{i=1}^k y_i\\
+\end{align}
+
+
+\begin{equation}
+\mathcal{H}(f_1) = \begin{bmatrix}
+\frac{\partial^2}{\partial w_1 \partial w_1} & \frac{\partial^2}{\partial w_1 \partial w_2} & \frac{\partial^2}{\partial w_1 \partial b}\\
+\frac{\partial^2}{\partial w_2 \partial w_1} & \frac{\partial^2}{\partial w_2 \partial w_2} & \frac{\partial^2}{\partial w_2 \partial b}\\
+\frac{\partial^2}{\partial b \partial w_1} & \frac{\partial^2}{\partial b \partial w_2} & \frac{\partial^2}{\partial b \partial b}\\
+\end{bmatrix}
+\end{equation}
+
+
+
+\begin{align}
+\frac{\partial^2}{\partial w_1 \partial w_1} &=  \frac{\partial}{\partial w_1} \left[  \lOneLossDwOne \right]  = \frac{\partial}{\partial w_1} \left[ w_1 \right] = 1
 \end{align}
 
 \begin{align}
-\frac{\partial}{\partial b} f_1(x) &= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ 1-y_i \cdot \left( w\tr x_i + b \right) \right]\\
-&= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ -y_i w\tr x_i + -y_ib \right]\\
-&= c \cdot \sum\limits_{i=1}^k  -y_i\\
+\frac{\partial^2}{\partial w_1 \partial w_2} &=  \frac{\partial}{\partial w_2} \left[  \lOneLossDwOne \right] =  0
 \end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial w_1 \partial b} &=  \frac{\partial}{\partial b} \left[  \lOneLossDwOne \right] = 0
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial w_2 \partial w_1} &=  \frac{\partial}{\partial w_1} \left[ \lOneLossDwTwo \right] = 0
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial w_2 \partial w_2} &= \frac{\partial}{\partial w_2} \left[ \lOneLossDwTwo \right] = \frac{\partial}{\partial w_2} \left[ w_2 \right] = 1
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial w_2 \partial w_1 b} &= \frac{\partial}{\partial b} \left[ \lOneLossDwTwo \right] = 0
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial b \partial w_1} &= \frac{\partial}{\partial w_1} \left[  - c \cdot \sum\limits_{i=1}^k y_i \right] = 0
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial b \partial w_2}  &= \frac{\partial}{\partial w_2} \left[  - c \cdot \sum\limits_{i=1}^k y_i \right] = 0
+\end{align}
+
+\begin{align}
+\frac{\partial^2}{\partial b \partial b} &= \frac{\partial}{\partial b} \left[  - c \cdot \sum\limits_{i=1}^k y_i \right] = 0
+\end{align}
+
+
+\begin{equation}
+\Rightarrow \mathcal{H}(f_1) = \begin{bmatrix}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0&0&0\\
+\end{bmatrix}
+\end{equation}
 
 
 \hr
 \subsubsection*{$L_2$ Loss}
+\newcommand{\lTwoLoss}{1-y_i \cdot \left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b\right)}
 \begin{equation}
-\min\limits_{x \in \mathbb{R}^n} f_2(x) = \frac{1}{2} w\tr w +c \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,1-y_i \cdot \left( w\tr x_i + b \right) \right\}^2\right]
+\min\limits_{x \in \mathbb{R}^n} f_2(x) = \frac{1}{2} w_1^2 + w_2^2 +c \cdot \sum\limits_{i=1}^k \left[ \max \left\{ 0,\lTwoLoss  \right\}^2\right]
 \end{equation}
+
+
+\begin{align}
+\frac{\partial}{\partial w_1} f_1(x) &= \frac{1}{2} \frac{\partial}{\partial w_1} \left[  w_1^2 + w_2^2 \right]  +c \cdot \sum\limits_{i=1}^k  \left[ \left( \lTwoLoss \right)^2 \right]\\
+&= \frac{1}{2} \frac{\partial}{\partial w_1} \left[  w_1^2 + w_2^2 \right]  +c \cdot \sum\limits_{i=1}^k  \left[ \left( \lTwoLoss \right)^2 \right]
+\end{align}
+
+\begin{align}
+\frac{\partial}{\partial w_2} f_1(x) &= w_1^2 + 2w_2  - c \cdot \sum\limits_{i=1}^k y_i  x_2^{(i)} \\
+\end{align}
+
+
+
+\begin{align}
+\frac{\partial}{\partial b} f_1(x) &= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ 1-y_i \cdot \left( w_1  x_1^{(i)} + w_2  x_2^{(i)} + b \right) \right]\\
+&= c \cdot \sum\limits_{i=1}^k  \frac{\partial}{\partial b} \left[ -y_i w_1  x_1^{(i)} +  w_2  x_2^{(i)} -y_ib \right]\\
+&= - c \cdot \sum\limits_{i=1}^k y_i\\
+\end{align}
+
+
+\begin{equation}
+\mathcal{H}(f_1) = \begin{bmatrix}
+\frac{\partial^2}{\partial w_1 \partial w_1} & \frac{\partial^2}{\partial w_1 \partial w_2} & \frac{\partial^2}{\partial w_1 \partial b}\\
+\frac{\partial^2}{\partial w_2 \partial w_1} & \frac{\partial^2}{\partial w_2 \partial w_2} & \frac{\partial^2}{\partial w_2 \partial b}\\
+\frac{\partial^2}{\partial b \partial w_1} & \frac{\partial^2}{\partial b \partial w_2} & \frac{\partial^2}{\partial b \partial b}\\
+\end{bmatrix}
+\end{equation}
+
+
+
+
+
+
+
 \hr
 \subsubsection*{Logistic Loss}
 \newcommand{\zLog}{1+\exp(-y_i (w\tr x_i + b))}
