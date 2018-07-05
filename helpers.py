@@ -2,6 +2,15 @@ import numpy as np
 import numpy.linalg as npl
 
 
+def line(x, a, b, c):
+    return (a * x + c)/(-1 * b)
+
+def plot_line(feature, plot, resolutions,col):
+    x = np.linspace(min(feature), max(feature), 10)
+    return plot.plot(x, line(x, resolutions[0], resolutions[1], resolutions[2]),c=col)
+
+
+
 def crit1(fx_thisTime, fx_nextTime, epsilon):
     return(fx_thisTime - fx_nextTime <= epsilon * max(1, abs(fx_thisTime)))
 
