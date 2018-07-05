@@ -125,24 +125,11 @@ def squarerootExampleHessian(x):
     return((1 + x**2)**(-3 / 2))
 
 #L1 SVM
-
 def l1_svm(w,X,Y,c=10):
     t = 0.5 * w[:2].T.dot(w[:2])
     indexSet = range(X.shape[0])
     reg = sum([max(0,1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2])) for i in indexSet])
     return t + c * reg
-
-
-    #t = 0.5 * w[:2].T.dot(w[:2])
-    #pairs = zip(X,Y)
-    #indexSet = range(X.shape[0])
-    #dw1 = w[0]  - c *    sum([Y[i]* X[i,0]       if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
-    #dw1 = w[1]  - c *    sum([Y[i] *X[i,1]       if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
-    #db =        -c *    sum([Y[i]              if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
-
-    #return 0.5 * w[:2].T.dot(w[:2]) + c * sum([max(0,1-(pair[1]* (w[0] * pair[0][0] + w[1]* pair[0][1] + w[2]))) for pair in pairs])
-    #return 0.5 * 
-
 
 def dl1_svm(w,X,Y,c=10):
     pairs = zip(X,Y)
