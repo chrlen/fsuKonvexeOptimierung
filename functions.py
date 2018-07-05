@@ -125,15 +125,76 @@ def squarerootExampleHessian(x):
     return((1 + x**2)**(-3 / 2))
 
 #L1 SVM
+
+def l1_svm(w,X,Y,c=10):
+    t = 0.5 * w[:2].T.dot(w[:2])
+    indexSet = range(X.shape[0])
+    reg = sum([max(0,1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2])) for i in indexSet])
+    return t + c * reg
+
+
+    #t = 0.5 * w[:2].T.dot(w[:2])
+    #pairs = zip(X,Y)
+    #indexSet = range(X.shape[0])
+    #dw1 = w[0]  - c *    sum([Y[i]* X[i,0]       if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+    #dw1 = w[1]  - c *    sum([Y[i] *X[i,1]       if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+    #db =        -c *    sum([Y[i]              if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+
+    #return 0.5 * w[:2].T.dot(w[:2]) + c * sum([max(0,1-(pair[1]* (w[0] * pair[0][0] + w[1]* pair[0][1] + w[2]))) for pair in pairs])
+    #return 0.5 * 
+
+
+def dl1_svm(w,X,Y,c=10):
+    pairs = zip(X,Y)
+    dw1 = w[0] - c * sum([ pair[1] * pair[0][0] for pair in pairs])
+    pairs = zip(X,Y)
+    dw2 = w[1] - c * sum([ pair[1] * pair[0][1] for pair in pairs])
+    pairs = zip(X,Y)
+    db =  -c * sum([ pair[1] for pair in pairs])
+    return(np.array([dw1,dw2,db]))
+
+def hl1_svm(w):
+    return(np.vstack([[1,0,0],[0,1,0],[0,0,1]]))
+
+
 #L2 SVM
-#Logistic SVM
+def l2_svm(w,X,Y,c=10):
+    t = 0.5 * w[:2].T.dot(w[:2])
+    indexSet = range(X.shape[0])
+    reg = [max(0,1-Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2])) for i in indexSet]
+    maxReg = np.array(list(map(lambda x: max(0,x),reg)))**2
+    return t + c * sum(maxReg)
 
-def lsvm(X,Y,w,b,c=10):
-    pairs = zip(X,Y)
-    res = 0.5 * w.T.dot(w) + c * sum([np.log(1+ np.exp(-pair[1] * (w.dot(pair[0]) + b))) for pair in pairs])
-    return(res)
+def dl2_svm(w,X,Y,c=10):
+    indexSet = range(X.shape[0])
+    dw1 = w[0]  - 2 *   c * sum([Y[i] *X[i,0]  * max(0,(1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]))) for i in indexSet])
+    dw2 = w[1]  - 2 *   c * sum([Y[i] *X[i,1]  * max(0,(1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]))) for i in indexSet])
+    db =        - 2 *   c * sum([Y[i]          * max(0,(1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]))) for i in indexSet])
+    return(np.array([dw1,dw2,db]))
 
-def dlsvm(X,Y,w,b,c=10):
-    pairs = zip(X,Y)
-    res =
+def hl2_svm(w,X,Y,c=10):
+    indexSet = range(X.shape[0])
+    dw1dw1 = 1 + c *    sum([2*Y[i]**2 * X[i,0]**2        if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+    dw1dw2 = c *        sum([2*Y[i]**2 * X[i,0] * X[i,1]  if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+    dw1db = c *         sum([2*Y[i]**2 * X[i,0]           if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+    dw2dw1 = dw1dw2
+    dw2dw2 = 1 + c *    sum([2*Y[i]**2 * X[i,1]**2        if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+    dw2db = c *         sum([2*Y[i]**2 * X[i,1]           if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+    dbdw1 = dw1db
+    dbdw2 = c *         sum([2*Y[i]**2 * X[i,1]           if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+    dbdb = c *          sum([2*Y[i]**2                    if 1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]) > 0 else 0   for i in indexSet])
+
+    return np.vstack([
+        [dw1dw1,dw1dw2,dw1db],
+        [dw2dw1,dw2dw2,dw2db],
+        [dbdw1,dbdw2,dbdb]])
+    
+
+#Log SVM
+def log_svm(w,X,Y,c=10):
+    t = 0.5 * w[:2].T.dot(w[:2])
+    indexSet = range(X.shape[0])
+    reg = sum([np.log(1+np.exp(1 - Y[i]*(w[0] * X[i,0] + w[1] * X[i,1] + w[2]))) for i in indexSet ])
+    return t + c * reg
+
 
