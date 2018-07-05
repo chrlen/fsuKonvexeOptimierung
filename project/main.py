@@ -45,7 +45,6 @@ for subset in subsets:
     print(partialdL1_Svm(np.array([1,2,0])))
 
     def getID(x):
-        print("x",x)
         return(np.eye(3))
 
     l1Problem = dc.NewtonOptimizationProblem(
@@ -67,7 +66,7 @@ for subset in subsets:
     )
 
     dc.optimize(l1Problem)
-    h1 = hlp.plot_line(X[:, 0], plt, l1Problem.getMin(), "yellow")
+    h1, = hlp.plot_line(X[:, 0], plt, l1Problem.getMin(), "yellow")
 
     # -------- -------- Train L2 SVM -------- --------
     partialL2_Svm = partial(fct.l2_svm, X=X, Y=Y)
@@ -96,7 +95,7 @@ for subset in subsets:
     dc.optimize(l2Problem)
 
     #Plot descision border into scatterplot
-    h2 = hlp.plot_line(X[:,0],plt,l2Problem.getMin(),"cyan")
+    h2, = hlp.plot_line(X[:,0],plt,l2Problem.getMin(),"cyan")
 
 
     # -------- -------- Train L2 SVM -------- --------
@@ -125,8 +124,8 @@ for subset in subsets:
     dc.optimize(logProblem)
 
     # Plot descision border into scatterplot
-    h3 = hlp.plot_line(X[:,0],plt,logProblem.getMin(),"magenta")
+    h3, = hlp.plot_line(X[:,0],plt,logProblem.getMin(),"magenta")
 
-    plt.legend(['L1 SVM', 'L2 SVM','Logistic SVM'])
+    plt.legend((h1,h2,h3),['L1 SVM', 'L2 SVM','Logistic SVM'])
     plt.savefig("plot/"+columnNames[subset[0]] + "_" + columnNames[subset[1]]+'.png')
     plt.close()
