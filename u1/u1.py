@@ -1,6 +1,5 @@
-from myPlot import plotSurface
-from myPlot import plotContour
-
+from helpers import plotContour
+from helpers import plotSurface
 from functions import rosenbrock
 plotSurface(-3.5,3.5,0.1,-3.5,3.5,0.1,rosenbrock,"plots/","rosenbrock")
 plotContour(-3.5,3.5,0.1,-3.5,3.5,0.1,rosenbrock,"plots/","rosenbrock")
